@@ -1,0 +1,15 @@
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\bin\Debug\net8.0\xadrez_logic.exe
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\bin\Debug\net8.0\xadrez_logic.deps.json
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\bin\Debug\net8.0\xadrez_logic.runtimeconfig.json
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\bin\Debug\net8.0\xadrez_logic.dll
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\bin\Debug\net8.0\xadrez_logic.pdb
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\obj\Debug\net8.0\xadrez_logic.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\obj\Debug\net8.0\xadrez_logic.AssemblyInfoInputs.cache
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\obj\Debug\net8.0\xadrez_logic.AssemblyInfo.cs
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\obj\Debug\net8.0\xadrez_logic.csproj.CoreCompileInputs.cache
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\obj\Debug\net8.0\xadrez_logic.sourcelink.json
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\obj\Debug\net8.0\xadrez_logic.dll
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\obj\Debug\net8.0\refint\xadrez_logic.dll
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\obj\Debug\net8.0\xadrez_logic.pdb
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\obj\Debug\net8.0\xadrez_logic.genruntimeconfig.cache
+C:\Users\pedro\OneDrive\Documentos\logica-c#\xadrez_logic\obj\Debug\net8.0\ref\xadrez_logic.dll

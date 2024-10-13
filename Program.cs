@@ -1,13 +1,13 @@
-﻿Console.Write("XADREZ");
+﻿using Xadrez.Draw;
+using Xadrez.Enemie;
+using Xadrez.Business;
+using Xadrez.User;
+
+Console.WriteLine("XADREZ");
+
+var tabuleiro = new Board();
 
 /*
-    criar entidades e suas capacidades:
-        * peoes
-        * torres
-        * cavalos
-        * bispos
-        * rei
-        * rainha
     matriz do tabuleiro:
         * 8 espaço (vertical 1-8)
         * 8 peças (horizontal a-h)
@@ -29,4 +29,4 @@
         * "IA" do oponente
 */
 
-
+tabuleiro.DrawTable();
