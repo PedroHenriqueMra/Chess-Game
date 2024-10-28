@@ -1,11 +1,11 @@
 ﻿using Xadrez.Draw;
-using Xadrez.Enemie;
 using Xadrez.Business;
 using Xadrez.User;
+using Xadrez.Input;
 
 Console.WriteLine("XADREZ");
 
-var tabuleiro = new Board();
+var game = new Game();
 
 /*
     matriz do tabuleiro:
@@ -29,4 +29,4 @@ var tabuleiro = new Board();
         * "IA" do oponente
 */
 
-tabuleiro.DrawTable();
+game.GameLoop();
