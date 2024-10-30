@@ -25,11 +25,11 @@ public class DrawBoard
         {"T", "H", "B", "K", "Q", "B", "H", "T"}
     };
 
-    private readonly string[] CaseNumber = new string[]
+    public readonly string[] CaseNumber = new string[]
     {
         "8", "7", "6", "5", "4", "3", "2", "1"
     };
-    private readonly string[] CaseAlpha = new string[]
+    public readonly string[] CaseAlpha = new string[]
     {
         "a", "b", "c", "d", "e", "f", "g", "h"
     };
@@ -79,7 +79,7 @@ public class DrawBoard
                 // desenha o tabluleiro
                 Console.Write($" {Table[col, lin]} ");
                 Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
             }
             Console.Write("\n");
         }
