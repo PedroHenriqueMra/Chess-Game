@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualBasic;
+using Xadrez.User;
 
 namespace Xadrez.Draw;
 /// <summary>
@@ -13,7 +14,7 @@ public class DrawBoard
     /// This is the headquarters of the game.
     /// I keep the fields in string format to avoid type errors.
     /// </summary>
-    private readonly string[,] Table = new string[8, 8] // [[8],[8],[8],[8],[8],[8],[8],[8]]
+    public readonly string[,] Table = new string[8, 8] // [[8],[8],[8],[8],[8],[8],[8],[8]]
     {
         {"t", "h", "b", "k", "q", "b", "h", "t"},
         {"p", "p", "p", "p", "p", "p", "p", "p"},
@@ -39,31 +40,31 @@ public class DrawBoard
         DrawTableGame(null, null);
     }
 
-    public void DrawSelected(int setCol, int setLin)
+    public void DrawSelected(string codeLine, string codeCol)
     {
-        setCol = 0;
-        setLin = 0;
-        DrawTableGame(setCol, setLin);
+        int line = GetCoordinates.GetCoordinateLine(CaseNumber, codeLine.Trim());
+        int column = GetCoordinates.GetCoordinateColumn(CaseAlpha, codeCol.ToLower().Trim());
+        Console.WriteLine($"{line} - {column}");
+        Console.WriteLine(Table[line, column]);
+        Console.WriteLine(Table[line, column] == Table[line, column].ToUpper() ? $"a peça {Table[line, column]} é sua" : $"a peça {Table[line, column]} nao é sua!");
+
+        DrawTableGame(line, column);
     }
 
-
-
-
-
-    private void DrawTableGame(int? column, int? line)
+    private void DrawTableGame(int? lineSelected, int? columnSelected)
     {
         Console.Write("\n");
 
-        for (int col = 0; col < 8; col++)
+        for (int lin = 0; lin < 8; lin++)
         {
-            Console.Write($" {CaseNumber[col]} ");
+            Console.Write($" {CaseNumber[lin]} ");
             // for do proprio jogo
-            for (int lin = 0; lin < 8; lin++)
+            for (int col = 0; col < 8; col++)
             {
-                if (column != null && line != null) // selected
+                if (lineSelected != null && columnSelected != null) // selected
                 {
                     // color the case selected
-                    if (col == column && lin == line)
+                    if (lin == lineSelected && col == columnSelected)
                     {
                         Console.BackgroundColor = ConsoleColor.Yellow;
                         Console.ForegroundColor = ConsoleColor.Green;
@@ -71,13 +72,13 @@ public class DrawBoard
                 }
                 else // xadrez
                 {
-                    Console.BackgroundColor = (col + lin) % 2 == 0 ? ConsoleColor.White : ConsoleColor.Black;
+                    Console.BackgroundColor = (lin + col) % 2 == 0 ? ConsoleColor.White : ConsoleColor.Black;
                 }
                 // cor dos jogadores
-                ColorPlayer(col, lin);
+                ColorPlayer(lin, col);
 
                 // desenha o tabluleiro
-                Console.Write($" {Table[col, lin]} ");
+                Console.Write($" {Table[lin, col]} ");
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = ConsoleColor.White;
             }
@@ -92,17 +93,17 @@ public class DrawBoard
         Console.Write("\n");
     }
 
-    private void ColorPlayer(int col, int lin)
+    private void ColorPlayer(int lin, int col)
     {
-        if (Table[col, lin] != "-")
+        if (Table[lin, col] != "-")
         {
-            if ((col + lin) % 2 == 0) // color more dark for light background
+            if ((lin + col) % 2 == 0) // color more dark for light background
             {
-                Console.ForegroundColor = Table[col, lin] == Table[col, lin].ToUpper() ? ConsoleColor.DarkBlue : ConsoleColor.DarkRed;
+                Console.ForegroundColor = Table[lin, col] == Table[lin, col].ToUpper() ? ConsoleColor.DarkBlue : ConsoleColor.DarkRed;
             }
             else // color more light for dark background
             {
-                Console.ForegroundColor = Table[col, lin] == Table[col, lin].ToUpper() ? ConsoleColor.Blue : ConsoleColor.Red;
+                Console.ForegroundColor = Table[lin, col] == Table[lin, col].ToUpper() ? ConsoleColor.Blue : ConsoleColor.Red;
             }
         }
     }

@@ -1,6 +1,7 @@
 using System.Collections;
 using Xadrez.Draw;
 using Xadrez.User;
+using Xadrez.Business;
 
 namespace Xadrez.Input;
 
@@ -11,27 +12,36 @@ public class Game
 {
     public Game()
     {
+        // game table
         Board = new DrawBoard();
+        // player 1
+        PlayerUpper = new Player(true);
+        // player 2
+        PlayerLower = new Player(false);
+        // game logic
+        Logic = new Logic();
     }
     private DrawBoard Board;
-    public void GameLoop()
+    private Player PlayerUpper;
+    private Player PlayerLower;
+    private Logic Logic;
+    public async Task GameLoop()
     {
-        // player 1
-        var playerUpper = new Player(true);
-        // player 2
-        var playerLower = new Player(false);
-        
         // Game loop
         while (true)
         {
-            Board.DrawChessBoard();
-            InputPlay(playerUpper);
+            Turn(PlayerUpper);
+            for(var l=0;l<50;l++)
+            {Console.Write("-");};
+            await Task.Delay(2000);
+            Turn(PlayerLower);
+
             break;
         }
     }
 
     // Get user input
-    private int InputPlay(Player player)
+    private string[] InputPlayer(Player player)
     {
         Console.WriteLine($"Vez do {(player.IsUpper ? "azul" : "vermelho")}");
         InfoPlayer(player);
@@ -40,7 +50,7 @@ public class Game
         string[] coordinates = CaptureInput();
         Console.WriteLine($"Voce escolheu a linha {coordinates[0]} da coluna {coordinates[1]}");
 
-        return 0;
+        return coordinates;
     }
 
     private string[] CaptureInput()
@@ -101,5 +111,22 @@ public class Game
         Console.BackgroundColor = ConsoleColor.Black;
         Console.ForegroundColor = ConsoleColor.White;
         Console.Write("\n");
+    }
+
+    private void Turn(Player player)
+    {
+        while (true)
+        {
+            Board.DrawChessBoard();
+            var coordinates = InputPlayer(player);
+            // coordinate 0 == row | coordinate 1 = column
+            Board.DrawSelected(coordinates[0], coordinates[1]);
+            if (Logic.IsPlayersPiece(player, Board, coordinates))
+            {
+                
+            }
+
+            break;
+        }
     }
 }
