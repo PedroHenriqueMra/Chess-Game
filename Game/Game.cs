@@ -1,19 +1,16 @@
-using System.Collections;
-using Xadrez.Draw;
-using Xadrez.User;
-using Xadrez.Business;
-
-namespace Xadrez.Input;
-
 /// <summary>
 /// Manage all classes and player input.
 /// </summary>
 public class Game
 {
+    private Board Board;
+    private Player PlayerUpper;
+    private Player PlayerLower;
+    private Logic Logic;
     public Game()
     {
         // game table
-        Board = new DrawBoard();
+        Board = new Board();
         // player 1
         PlayerUpper = new Player(true);
         // player 2
@@ -21,18 +18,14 @@ public class Game
         // game logic
         Logic = new Logic();
     }
-    private DrawBoard Board;
-    private Player PlayerUpper;
-    private Player PlayerLower;
-    private Logic Logic;
+    
     public async Task GameLoop()
     {
         // Game loop
         while (true)
         {
             Turn(PlayerUpper);
-            for(var l=0;l<50;l++)
-            {Console.Write("-");};
+            for(var l=0;l<50;l++){Console.Write("-");};
             await Task.Delay(2000);
             Turn(PlayerLower);
 
@@ -44,7 +37,7 @@ public class Game
     private string[] InputPlayer(Player player)
     {
         Console.WriteLine($"Vez do {(player.IsUpper ? "azul" : "vermelho")}");
-        InfoPlayer(player);
+        player.InfoPlayer();
 
         Console.WriteLine("Faça sua jogada:");
         string[] coordinates = CaptureInput();
@@ -96,23 +89,6 @@ public class Game
         return coordinates;
     }
 
-    private void InfoPlayer(Player player)
-    {
-        Console.WriteLine($"Informações do jogador {(player.IsUpper ? "azul" : "vermelho")}:");
-        Console.ForegroundColor = ConsoleColor.Blue;
-        Console.WriteLine($"Peças vivas: {player.Parts}");
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("Peças capturadas:");
-        foreach (string p in player.Points)
-        {
-            Console.Write($" {p} ");
-        }
-
-        Console.BackgroundColor = ConsoleColor.Black;
-        Console.ForegroundColor = ConsoleColor.White;
-        Console.Write("\n");
-    }
-
     private void Turn(Player player)
     {
         while (true)
@@ -120,10 +96,9 @@ public class Game
             Board.DrawChessBoard();
             var coordinates = InputPlayer(player);
             // coordinate 0 == row | coordinate 1 = column
-            Board.DrawSelected(coordinates[0], coordinates[1]);
             if (Logic.IsPlayersPiece(player, Board, coordinates))
             {
-                
+                Board.DrawSelected(coordinates[0], coordinates[1]);
             }
 
             break;

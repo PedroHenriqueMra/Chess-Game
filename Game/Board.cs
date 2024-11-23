@@ -1,14 +1,7 @@
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.VisualBasic;
-using Xadrez.User;
-
-namespace Xadrez.Draw;
 /// <summary>
 /// It draw the visual game.
 /// </summary>
-public class DrawBoard
+public class Board
 {
     /// <summary>
     /// This is the headquarters of the game.
@@ -34,6 +27,7 @@ public class DrawBoard
     {
         "a", "b", "c", "d", "e", "f", "g", "h"
     };
+
     // Draw the table of game
     public void DrawChessBoard()
     {
@@ -46,12 +40,11 @@ public class DrawBoard
         int column = GetCoordinates.GetCoordinateColumn(CaseAlpha, codeCol.ToLower().Trim());
         Console.WriteLine($"{line} - {column}");
         Console.WriteLine(Table[line, column]);
-        Console.WriteLine(Table[line, column] == Table[line, column].ToUpper() ? $"a peça {Table[line, column]} é sua" : $"a peça {Table[line, column]} nao é sua!");
 
-        DrawTableGame(line, column);
+        DrawTableGame([line], [column]);
     }
 
-    private void DrawTableGame(int? lineSelected, int? columnSelected)
+    private void DrawTableGame(int[]? lineSelected, int[]? columnSelected)
     {
         Console.Write("\n");
 
@@ -63,12 +56,16 @@ public class DrawBoard
             {
                 if (lineSelected != null && columnSelected != null) // selected
                 {
-                    // color the case selected
-                    if (lin == lineSelected && col == columnSelected)
+                    for (var l = 0;l < lineSelected.Length;l++)
                     {
-                        Console.BackgroundColor = ConsoleColor.Yellow;
-                        Console.ForegroundColor = ConsoleColor.Green;
+                        if (lin == lineSelected[l] && col == columnSelected[l])
+                        {
+                            Console.BackgroundColor = ConsoleColor.Yellow;
+                            Console.ForegroundColor = ConsoleColor.Green;
+                        }
                     }
+                    // color the case selected
+                    
                 }
                 else // xadrez
                 {

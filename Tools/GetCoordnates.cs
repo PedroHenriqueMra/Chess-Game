@@ -1,5 +1,3 @@
-using Xadrez.Draw;
-
 public static class GetCoordinates
 {
     public static int GetCoordinateLine(string[] caseNumber, string codeLine)
