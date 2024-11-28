@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xadrez_logic", "xadrez_logic.csproj", "{E220AF64-B4D9-48FF-AA7D-AE29227D2026}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chess game", "Chess game.csproj", "{9135A587-72C4-4BE1-8460-1FF2F6651C0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E220AF64-B4D9-48FF-AA7D-AE29227D2026}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E220AF64-B4D9-48FF-AA7D-AE29227D2026}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E220AF64-B4D9-48FF-AA7D-AE29227D2026}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E220AF64-B4D9-48FF-AA7D-AE29227D2026}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9135A587-72C4-4BE1-8460-1FF2F6651C0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9135A587-72C4-4BE1-8460-1FF2F6651C0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9135A587-72C4-4BE1-8460-1FF2F6651C0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9135A587-72C4-4BE1-8460-1FF2F6651C0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {1FDEA2DD-D17A-4986-B472-D9909B697D5A}
+		SolutionGuid = {EBD3C70F-FCA9-4FE4-B004-02F1B68FF912}
 	EndGlobalSection
 EndGlobal

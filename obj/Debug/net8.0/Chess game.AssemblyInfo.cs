@@ -10,12 +10,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("xadrez_logic")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Chess game")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+73525752a3ae786dabe30846242e1b5fb494de5e")]
-[assembly: System.Reflection.AssemblyProductAttribute("xadrez_logic")]
-[assembly: System.Reflection.AssemblyTitleAttribute("xadrez_logic")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+79923f481ff99c0884796230543dd7c5bb8c0fa4")]
+[assembly: System.Reflection.AssemblyProductAttribute("Chess game")]
+[assembly: System.Reflection.AssemblyTitleAttribute("Chess game")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Gerado pela classe WriteCodeFragment do MSBuild.

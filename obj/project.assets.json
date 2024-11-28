@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\xadrez_logic\\xadrez_logic.csproj",
-      "projectName": "xadrez_logic",
-      "projectPath": "C:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\xadrez_logic\\xadrez_logic.csproj",
+      "projectUniqueName": "C:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\Chess game.csproj",
+      "projectName": "Chess game",
+      "projectPath": "C:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\Chess game.csproj",
       "packagesPath": "C:\\Users\\pedro\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\xadrez_logic\\obj\\",
+      "outputPath": "C:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\pedro\\AppData\\Roaming\\NuGet\\NuGet.Config"

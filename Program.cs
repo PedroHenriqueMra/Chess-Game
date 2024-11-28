@@ -1,4 +1,2 @@
-﻿Console.WriteLine("XADREZ");
-
-var game = new Game();
-await game.GameLoop();
+﻿// See https://aka.ms/new-console-template for more information
+Console.WriteLine("Hello, World!");
