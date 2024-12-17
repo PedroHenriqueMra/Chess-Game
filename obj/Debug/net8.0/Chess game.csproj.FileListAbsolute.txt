@@ -1,0 +1,18 @@
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\obj\Debug\net8.0\Chess game.csproj.AssemblyReference.cache
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\obj\Debug\net8.0\Chess game.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\obj\Debug\net8.0\Chess game.AssemblyInfoInputs.cache
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\obj\Debug\net8.0\Chess game.AssemblyInfo.cs
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\obj\Debug\net8.0\Chess game.csproj.CoreCompileInputs.cache
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\obj\Debug\net8.0\Chess game.sourcelink.json
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\bin\Debug\net8.0\Chess game.exe
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\bin\Debug\net8.0\Chess game.deps.json
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\bin\Debug\net8.0\Chess game.runtimeconfig.json
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\bin\Debug\net8.0\Chess game.dll
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\bin\Debug\net8.0\Chess game.pdb
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\bin\Debug\net8.0\Wacton.Unicolour.dll
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\obj\Debug\net8.0\Chess game.csproj.Up2Date
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\obj\Debug\net8.0\Chess game.dll
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\obj\Debug\net8.0\refint\Chess game.dll
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\obj\Debug\net8.0\Chess game.pdb
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\obj\Debug\net8.0\Chess game.genruntimeconfig.cache
+C:\Users\pedro\OneDrive\Documentos\logica-c#\Chess game\obj\Debug\net8.0\ref\Chess game.dll

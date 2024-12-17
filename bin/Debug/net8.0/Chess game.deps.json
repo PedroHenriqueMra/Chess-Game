@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Chess game/1.0.0": {
+        "dependencies": {
+          "Wacton.Unicolour": "4.7.0"
+        },
+        "runtime": {
+          "Chess game.dll": {}
+        }
+      },
+      "Wacton.Unicolour/4.7.0": {
+        "runtime": {
+          "lib/netstandard2.0/Wacton.Unicolour.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Chess game/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Wacton.Unicolour/4.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jHiRaAgGr+qG6eJnMZKJpFlDhebMDO+aLaKY2R3raQJnbsEmRVTJU1bLagIzY2EVoZVU2VokXRQPI5PSHeNMVg==",
+      "path": "wacton.unicolour/4.7.0",
+      "hashPath": "wacton.unicolour.4.7.0.nupkg.sha512"
+    }
+  }
+}

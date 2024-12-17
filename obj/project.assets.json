@@ -1,11 +1,38 @@
 {
   "version": 3,
   "targets": {
-    "net8.0": {}
+    "net8.0": {
+      "Wacton.Unicolour/4.7.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Wacton.Unicolour.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Wacton.Unicolour.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Wacton.Unicolour/4.7.0": {
+      "sha512": "jHiRaAgGr+qG6eJnMZKJpFlDhebMDO+aLaKY2R3raQJnbsEmRVTJU1bLagIzY2EVoZVU2VokXRQPI5PSHeNMVg==",
+      "type": "package",
+      "path": "wacton.unicolour/4.7.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "Resources/Unicolour.png",
+        "lib/netstandard2.0/Wacton.Unicolour.dll",
+        "wacton.unicolour.4.7.0.nupkg.sha512",
+        "wacton.unicolour.nuspec"
+      ]
+    }
+  },
   "projectFileDependencyGroups": {
-    "net8.0": []
+    "net8.0": [
+      "Wacton.Unicolour >= 4.7.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\pedro\\.nuget\\packages\\": {}
@@ -48,6 +75,12 @@
     "frameworks": {
       "net8.0": {
         "targetAlias": "net8.0",
+        "dependencies": {
+          "Wacton.Unicolour": {
+            "target": "Package",
+            "version": "[4.7.0, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",

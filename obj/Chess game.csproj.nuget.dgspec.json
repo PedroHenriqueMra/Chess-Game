@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\Chess game.csproj": {}
+    "c:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\Chess game.csproj": {}
   },
   "projects": {
-    "C:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\Chess game.csproj": {
+    "c:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\Chess game.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\Chess game.csproj",
+        "projectUniqueName": "c:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\Chess game.csproj",
         "projectName": "Chess game",
-        "projectPath": "C:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\Chess game.csproj",
+        "projectPath": "c:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\Chess game.csproj",
         "packagesPath": "C:\\Users\\pedro\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\obj\\",
+        "outputPath": "c:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pedro\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -42,6 +42,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Wacton.Unicolour": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
