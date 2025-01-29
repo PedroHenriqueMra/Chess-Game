@@ -6,37 +6,36 @@ namespace ChessGame.Piece.PieceModel;
 public abstract class Piece
 {
     public Position Position { get; set; }
-    public bool IsPossibleToMove { get; set; }
-    public bool IsYour { get; set; }
-    private readonly Board _board;
+    public bool IsWhite { get; set; }
+    public bool Jump { get; set; } = default;
+    public Board Board { get; protected set; }
+    public int Moves { get; set; }
 
-    public Piece(Board board, bool isYour)
+    public Piece(Board board, bool isWhite)
     {
-        _board = board; // dependence
-        IsYour = isYour;
+        Board = board; // Dependence
+        IsWhite = isWhite;
     }
 
-    // To map every possible steps
-    public virtual void PossibleMoves(out int[][] possibleStaps)
+    // Map -> if there's any step to do
+    public bool IsPossibleToMove()
     {
-        var possibleStapsList = new List<int[]>();
+        bool[,] moves = GetPositionsToStep();
 
-        this.IsPossibleToMove = false; // State reset
-        int[][] moves = ReturnPieceSteps();
-
-        // pos[0] = line, pos[1] = column
-        foreach (var pos in moves)
+        for (var line = 0;line < Board.Lenght[0];line++)
         {
-            var piece = _board.GetPieceByPosition(new Position(pos[0], pos[1]));
-            if (piece != null && !piece.IsYour)
-                possibleStapsList.Append([pos[0], pos[1]]);
+            for (var col = 0;line < Board.Lenght[1];col++)
+            {
+                if (moves[line, col])
+                {
+                    return true;
+                }
+            }
         }
 
-        if (possibleStapsList.Count > 0) this.IsPossibleToMove = true;
-
-        possibleStaps = possibleStapsList.ToArray();
+        return false;
     }
 
     // function to return every possible piece' steps
-    public abstract int[][] ReturnPieceSteps();
+    public abstract bool[,] GetPositionsToStep();
 }

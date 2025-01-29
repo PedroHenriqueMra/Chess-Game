@@ -1,6 +1,6 @@
 namespace ChessGame.Logic.PositionGame;
 
-public class Position
+public struct Position
 {
     public int Line { get; set; }
     public int Column { get; set; }
@@ -11,10 +11,11 @@ public class Position
         this.Column = column;
     }
 
-    public void ChangePosition(int line, int column)
+    public Position ChangePosition(int line, int column)
     {
         Line = line;
         Column = column;
+        return this;
     }
 
     public override string ToString()

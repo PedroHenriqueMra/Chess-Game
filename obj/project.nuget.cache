@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "s53/d9bc56w=",
+  "dgSpecHash": "k7XXyRY6RLs=",
   "success": true,
-  "projectFilePath": "c:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\Chess game.csproj",
+  "projectFilePath": "C:\\Users\\pedro\\OneDrive\\Documentos\\logica-c#\\Chess game\\Chess game.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\pedro\\.nuget\\packages\\wacton.unicolour\\4.7.0\\wacton.unicolour.4.7.0.nupkg.sha512"
   ],
