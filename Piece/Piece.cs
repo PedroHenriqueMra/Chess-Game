@@ -18,24 +18,13 @@ public abstract class Piece
     }
 
     // Map -> if there's any step to do
-    public bool IsPossibleToMove()
+    public bool IsPossibleToMove(Position pos)
     {
-        bool[,] moves = GetPositionsToStep();
+        bool[,] moves = GetPositionsToMove(IsWhite, Position);
 
-        for (var line = 0;line < Board.Lenght[0];line++)
-        {
-            for (var col = 0;line < Board.Lenght[1];col++)
-            {
-                if (moves[line, col])
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return moves[pos.Line, pos.Column];
     }
 
     // function to return every possible piece' steps
-    public abstract bool[,] GetPositionsToStep();
+    public abstract bool[,] GetPositionsToMove(bool isWhite, Position pos);
 }
