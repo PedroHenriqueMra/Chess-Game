@@ -11,20 +11,19 @@ public abstract class Piece
     public Board Board { get; protected set; }
     public int Moves { get; set; }
 
-    public Piece(Board board, bool isWhite)
+    public Piece(Board board, bool isWhite, Position position)
     {
-        Board = board; // Dependence
+        Position = position;
+        Board = board;
         IsWhite = isWhite;
     }
 
-    // Map -> if there's any step to do
     public bool IsPossibleToMove(Position pos)
     {
-        bool[,] moves = GetPositionsToMove(IsWhite, Position);
+        bool[,] moves = GetPositionsToMove();
 
         return moves[pos.Line, pos.Column];
     }
 
-    // function to return every possible piece' steps
-    public abstract bool[,] GetPositionsToMove(bool isWhite, Position pos);
+    public abstract bool[,] GetPositionsToMove();
 }

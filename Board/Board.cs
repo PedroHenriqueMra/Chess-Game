@@ -13,7 +13,6 @@ namespace ChessGame.Table
         public Game Game { get; set; }
         public Board(int numLine, int numCol, Game game)
         {
-            // booting slot pieces (headquarters)
             Pieces = new Piece[numLine, numCol];
             Lenght = [numLine, numCol];
 
@@ -58,6 +57,8 @@ namespace ChessGame.Table
                 Game.PlayerWhite.AmountPieces -= 1;
             }
         }
+
+
 
         public bool IsValidPosition(Position pos)
         {

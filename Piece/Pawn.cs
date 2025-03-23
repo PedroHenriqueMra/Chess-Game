@@ -14,30 +14,30 @@ namespace ChessGame.Piece.Entity
     public class Pawn : Piece
     {
         public bool InPassant { get; set; } = default;
-        public Pawn(Board board, bool IsWhite)
-        : base(board, IsWhite) { }
+        public Pawn(Board board, bool isWhite, Position position)
+        : base(board, isWhite, position) { }
 
         // plus line = get down on the board
         // minus line = get up on the board
-        public override bool[,] GetPositionsToMove(bool isWhite, Position basePosition)
+        public override bool[,] GetPositionsToMove()
         {
             var oneAhead = new Func<Position, Position>(pos => {
                 Position newPosition = new Position(0,0);
-                return isWhite
+                return IsWhite
                 ? newPosition.ChangePosition(pos.Line -= 1, pos.Column)
                 : newPosition.ChangePosition(pos.Line += 1, pos.Column);
             });
 
             var twoAhead = new Func<Position, Position>(pos => {
                 Position newPosition = new Position(0,0);
-                return isWhite
+                return IsWhite
                 ? newPosition.ChangePosition(pos.Line -= 2, pos.Column)
                 : newPosition.ChangePosition(pos.Line += 2, pos.Column);
             });
 
             var rightDiagonal = new Func<Position, Position>(pos => {
                 Position newPosition = new Position(0,0);
-                return isWhite
+                return IsWhite
                 ? newPosition.ChangePosition(pos.Line -= 1, pos.Column += 1)
                 : newPosition.ChangePosition(pos.Line += 1, pos.Column -= 1);
             });
@@ -45,7 +45,7 @@ namespace ChessGame.Piece.Entity
 
             var leftDiagonal = new Func<Position, Position>(pos => {
                 Position newPosition = new Position(0,0);
-                return isWhite
+                return IsWhite
                 ? newPosition.ChangePosition(pos.Line -= 1, pos.Column -= 1)
                 : newPosition.ChangePosition(pos.Line += 1, pos.Column += 1);
             });
@@ -55,14 +55,14 @@ namespace ChessGame.Piece.Entity
             Position pos = new Position(0,0);
 
             // Positions to move piece
-            pos = oneAhead(basePosition);
+            pos = oneAhead(Position);
             if (Board.IsValidPosition(pos) && Board.GetPieceByPosition(pos) == null)
             {
                 steps[pos.Line, pos.Column] = true;
             }
             if (Moves == 0)
             {
-                pos = twoAhead(basePosition);
+                pos = twoAhead(Position);
                 if (Board.IsValidPosition(pos) && Board.GetPieceByPosition(pos) == null)
                 {
                     steps[pos.Line, pos.Column] = true;
@@ -70,22 +70,22 @@ namespace ChessGame.Piece.Entity
             }
 
             // Positions to catch enemy piece to right
-            pos = rightDiagonal(basePosition);
-            if (Board.IsValidPosition(pos) && Board.GetPieceByPosition(pos) != null && Board.GetPieceByPosition(pos).IsWhite != isWhite)
+            pos = rightDiagonal(Position);
+            if (Board.IsValidPosition(pos) && Board.GetPieceByPosition(pos) != null && Board.GetPieceByPosition(pos).IsWhite != IsWhite)
             {
                 steps[pos.Line, pos.Column] = true;
             }
             // Position to catch enemy piece to left
-            pos = leftDiagonal(basePosition);
-            if (Board.IsValidPosition(pos) && Board.GetPieceByPosition(pos) != null! && Board.GetPieceByPosition(pos).IsWhite != isWhite)
+            pos = leftDiagonal(Position);
+            if (Board.IsValidPosition(pos) && Board.GetPieceByPosition(pos) != null! && Board.GetPieceByPosition(pos).IsWhite != IsWhite)
             {
                 steps[pos.Line, pos.Column] = true;
             }
 
             // En passant to right
-            pos = rightDiagonal(basePosition);
+            pos = rightDiagonal(Position);
             Pawn? piece = Board.GetPieceByPosition(pos) as Pawn;
-            if (piece != null && piece is Pawn && Board.IsValidPosition(pos) && piece.IsWhite != isWhite)
+            if (piece != null && piece is Pawn && Board.IsValidPosition(pos) && piece.IsWhite != IsWhite)
             {
                 if (piece.InPassant)
                 {
@@ -94,9 +94,9 @@ namespace ChessGame.Piece.Entity
             }
 
             // En passant to left
-            pos = leftDiagonal(basePosition);
+            pos = leftDiagonal(Position);
             piece = Board.GetPieceByPosition(pos) as Pawn;
-            if (piece != null && piece is Pawn && Board.IsValidPosition(pos) && piece.IsWhite != isWhite)
+            if (piece != null && piece is Pawn && Board.IsValidPosition(pos) && piece.IsWhite != IsWhite)
             {
                 if (piece.InPassant)
                 {
@@ -109,10 +109,7 @@ namespace ChessGame.Piece.Entity
 
         public override string ToString()
         {
-            if (IsWhite)
-            {
-                return "P";
-            }
+            if (this.IsWhite) return "P";
 
             return "p";
         }

@@ -5,6 +5,8 @@ using ChessGame.Piece.Entity;
 using ChessGame.Piece.PieceModel;
 using ChessGame.Game.main;
 using ChessGame.Logic.SystemPlayer;
+using System.Runtime.InteropServices;
+using System.ComponentModel;
 
 // To state instances
 // Game:
@@ -15,7 +17,7 @@ Board board = new Board(8, 8, game);
 
 // Puting pieces:
 // White player
-board.Pieces[0,0] = new Rook(board, true);
+/* board.Pieces[0,0] = new Rook(board, true);
 board.Pieces[0,1] = new Knight(board, true);
 board.Pieces[0,2] = new Bishop(board, true);
 board.Pieces[0,3] = new King(board, true);
@@ -48,10 +50,44 @@ board.Pieces[6,3] = new Pawn(board, false);
 board.Pieces[6,4] = new Pawn(board, false);
 board.Pieces[6,5] = new Pawn(board, false);
 board.Pieces[6,6] = new Pawn(board, false);
-board.Pieces[6,7] = new Pawn(board, false);
+board.Pieces[6,7] = new Pawn(board, false); */
 
-// loop game
-while (true)
+Piece piece = new Knight(board, true, new Position(4,4));
+bool[,] steps = piece.GetPositionsToMove();
+
+for (int c = 0;c < 8;c++)
 {
-    
+    for (int l = 0;l < 8;l++)
+    {
+        if (!steps[c,l])
+        {
+            Console.Write(" - ");
+        }
+        else
+        {
+            Console.Write(" 0 ");
+        }
+    }
+    Console.WriteLine("");
 }
+
+
+
+
+
+/* for (int c = 0;c < 8;c++)
+{
+    for (int l=0;l < 8;l++)
+    {
+        if (board.Pieces[c, l] != null)
+        {
+            Console.Write($" {board.Pieces[c,l]} ");
+        }
+        else
+        {
+            Console.Write(" - ");
+        }
+    }
+    Console.WriteLine();
+}
+ */
