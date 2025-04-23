@@ -13,7 +13,49 @@ using System.ComponentModel;
 Player playerWhite = new Player(true);
 Player playerBlack = new Player(false);
 Game game = new Game(playerWhite, playerBlack);
-Board board = new Board(8, 8, game);
+
+Piece pieceTest = new Bishop(game, true, new Position(4,3));
+
+// enemy pieces
+Piece piece1 = new Bishop(game, false, new Position(2,5));
+Piece piece2 = new Bishop(game, false, new Position(4,6));
+
+game.Board.Pieces[pieceTest.Position.Column, pieceTest.Position.Line] = pieceTest;
+game.Board.Pieces[piece1.Position.Column, piece1.Position.Line] = piece1;
+game.Board.Pieces[piece2.Position.Column, piece2.Position.Line] = piece2;
+
+// knight - ok
+// queen - ok
+// king - ok
+// pawn - ok
+// rook - ok
+// bishop - ok
+
+// Draw tests
+var steps = pieceTest.GetPositionsToMove();
+for (int c = 0;c < 8;c++)
+{
+    for (int l = 0;l < 8;l++)
+    {
+        if (!steps[c,l])
+        {
+            if (game.Board.Pieces[c,l] != null)
+            {
+                Console.Write($" {game.Board.Pieces[c,l].ToString()} ");
+            }
+            else
+            {
+                Console.Write(" - ");
+            }
+            
+        }
+        else
+        {
+            Console.Write(" 0 ");
+        }
+    }
+    Console.WriteLine("");
+}
 
 // Puting pieces:
 // White player
@@ -52,42 +94,7 @@ board.Pieces[6,5] = new Pawn(board, false);
 board.Pieces[6,6] = new Pawn(board, false);
 board.Pieces[6,7] = new Pawn(board, false); */
 
-Piece piece = new Knight(board, true, new Position(4,4));
-bool[,] steps = piece.GetPositionsToMove();
-
-for (int c = 0;c < 8;c++)
-{
-    for (int l = 0;l < 8;l++)
-    {
-        if (!steps[c,l])
-        {
-            Console.Write(" - ");
-        }
-        else
-        {
-            Console.Write(" 0 ");
-        }
-    }
-    Console.WriteLine("");
-}
-
-
-
-
-
-/* for (int c = 0;c < 8;c++)
-{
-    for (int l=0;l < 8;l++)
-    {
-        if (board.Pieces[c, l] != null)
-        {
-            Console.Write($" {board.Pieces[c,l]} ");
-        }
-        else
-        {
-            Console.Write(" - ");
-        }
-    }
-    Console.WriteLine();
-}
- */
+//while (!game.GameOver)
+//{
+    
+//}

@@ -1,29 +1,40 @@
-using ChessGame.Logic.PositionGame;
-using ChessGame.Table;
-
-namespace ChessGame.Piece.PieceModel;
-
-public abstract class Piece
+namespace ChessGame.Piece.PieceModel
 {
-    public Position Position { get; set; }
-    public bool IsWhite { get; set; }
-    public bool Jump { get; set; } = default;
-    public Board Board { get; protected set; }
-    public int Moves { get; set; }
+    using ChessGame.Logic.PositionGame;
+    using ChessGame.Table;
+    using ChessGame.Game.main;
 
-    public Piece(Board board, bool isWhite, Position position)
+    public abstract class Piece
     {
-        Position = position;
-        Board = board;
-        IsWhite = isWhite;
+        public Position Position { get; set; }
+        public bool IsWhite { get; set; }
+        public Game Game { get; protected set; }
+        public int Moves { get; set; }
+
+        public Piece(Game game, bool isWhite, Position position)
+        {
+            Position = position;
+            IsWhite = isWhite;
+            Game = game;
+        }
+
+        public void IncreaseMovimente()
+        {
+            this.Moves++; 
+        } 
+
+        public bool IsPossibleToMove(Position pos)
+        {
+            bool[,] moves = GetPositionsToMove();
+
+            return moves[pos.Column,pos.Line];
+        }
+
+        public abstract bool[,] GetPositionsToMove();
+
+        public override int GetHashCode()
+        {
+            return this.Position.GetHashCode();
+        }
     }
-
-    public bool IsPossibleToMove(Position pos)
-    {
-        bool[,] moves = GetPositionsToMove();
-
-        return moves[pos.Line, pos.Column];
-    }
-
-    public abstract bool[,] GetPositionsToMove();
 }

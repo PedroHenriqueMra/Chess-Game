@@ -11,12 +11,10 @@ namespace ChessGame.Table
         public Piece[,] Pieces { get; set; }
         public int[] Lenght { get; set; } // [0] == line [1] == column
         public Game Game { get; set; }
-        public Board(int numLine, int numCol, Game game)
+        public Board(int numCol,int numLine)
         {
-            Pieces = new Piece[numLine, numCol];
-            Lenght = [numLine, numCol];
-
-            Game = game;
+            Pieces = new Piece[numCol, numLine];
+            Lenght = [numCol,numLine];
         }
 
         public Piece? GetPieceByPosition(Position position)
@@ -24,47 +22,23 @@ namespace ChessGame.Table
             if (position.Column < 0 || position.Column >= Lenght[1]) return null;
             if (position.Line < 0 || position.Line >= Lenght[1]) return null;
 
-            return Pieces[position.Line, position.Column];
+            return Pieces[position.Column,position.Line];
         }
 
-        public void MovePiece(Piece piece, Position pos)
+        public void MovePiece(Piece piece, Position target)
         {
-            if (!piece.IsPossibleToMove(pos)) return;
-            if (!IsValidPosition(pos)) return;
-
-            Piece? oponent = GetPieceByPosition(pos);
-            if (oponent != null) EatPiece(piece, oponent);
-
-            Pieces[piece.Position.Line,piece.Position.Column] = null;
-            Pieces[pos.Line,pos.Column] = piece;
-            piece.Position.ChangePosition(pos.Line, pos.Column);
-        }
-
-        private void EatPiece(Piece piece, Piece oponent)
-        {
-            if (piece.IsWhite)
+            if (IsValidPosition(target))
             {
-                Game.PlayerWhite.AmountPiecesYouCatch += 1;
-                Game.PlayerWhite.PiecesYouCatch.Add(oponent);
-
-                Game.PlayerBlack.AmountPieces -= 1;
-            }
-            else
-            {
-                Game.PlayerBlack.AmountPiecesYouCatch += 1;
-                Game.PlayerBlack.PiecesYouCatch.Add(oponent);
-
-                Game.PlayerWhite.AmountPieces -= 1;
+                Pieces[piece.Position.Column, piece.Position.Line] = null;
+                Pieces[target.Column, target.Line] = piece;
             }
         }
-
-
 
         public bool IsValidPosition(Position pos)
         {
             try
             {
-                var check = Pieces[pos.Line, pos.Column];
+                var check = Pieces[pos.Column,pos.Line];
                 return true;
             }
             catch (IndexOutOfRangeException)

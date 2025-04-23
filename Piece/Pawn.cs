@@ -2,109 +2,105 @@ using ChessGame.Table;
 
 namespace ChessGame.Piece.Entity
 {
-    using System.Dynamic;
-    using System.Reflection.Metadata;
     using ChessGame.Logic.PositionGame;
     using ChessGame.Piece.PieceModel;
     using ChessGame.Game.main;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Runtime.InteropServices;
-    using System.Reflection.Metadata.Ecma335;
 
     public class Pawn : Piece
     {
-        public bool InPassant { get; set; } = default;
-        public Pawn(Board board, bool isWhite, Position position)
-        : base(board, isWhite, position) { }
+        public Pawn(Game game, bool isWhite, Position position)
+        : base(game, isWhite, position) { }
 
         // plus line = get down on the board
         // minus line = get up on the board
         public override bool[,] GetPositionsToMove()
-        {
-            var oneAhead = new Func<Position, Position>(pos => {
-                Position newPosition = new Position(0,0);
-                return IsWhite
-                ? newPosition.ChangePosition(pos.Line -= 1, pos.Column)
-                : newPosition.ChangePosition(pos.Line += 1, pos.Column);
-            });
-
-            var twoAhead = new Func<Position, Position>(pos => {
-                Position newPosition = new Position(0,0);
-                return IsWhite
-                ? newPosition.ChangePosition(pos.Line -= 2, pos.Column)
-                : newPosition.ChangePosition(pos.Line += 2, pos.Column);
-            });
-
-            var rightDiagonal = new Func<Position, Position>(pos => {
-                Position newPosition = new Position(0,0);
-                return IsWhite
-                ? newPosition.ChangePosition(pos.Line -= 1, pos.Column += 1)
-                : newPosition.ChangePosition(pos.Line += 1, pos.Column -= 1);
-            });
-            
-
-            var leftDiagonal = new Func<Position, Position>(pos => {
-                Position newPosition = new Position(0,0);
-                return IsWhite
-                ? newPosition.ChangePosition(pos.Line -= 1, pos.Column -= 1)
-                : newPosition.ChangePosition(pos.Line += 1, pos.Column += 1);
-            });
-    
-            
-            bool[,] steps = new bool[Board.Lenght[0], Board.Lenght[1]];
+        {                 
+            bool[,] steps = new bool[Game.Board.Lenght[0], Game.Board.Lenght[1]];
             Position pos = new Position(0,0);
 
             // Positions to move piece
-            pos = oneAhead(Position);
-            if (Board.IsValidPosition(pos) && Board.GetPieceByPosition(pos) == null)
+            pos = OneStepAhead(Position);
+            if (Game.Board.IsValidPosition(pos) && Game.Board.GetPieceByPosition(pos) == null)
             {
-                steps[pos.Line, pos.Column] = true;
+                steps[pos.Column,pos.Line] = true;
             }
             if (Moves == 0)
             {
-                pos = twoAhead(Position);
-                if (Board.IsValidPosition(pos) && Board.GetPieceByPosition(pos) == null)
+                pos = TwoStepsAhead(Position);
+                if (Game.Board.IsValidPosition(pos) && Game.Board.GetPieceByPosition(pos) == null)
                 {
-                    steps[pos.Line, pos.Column] = true;
+                    steps[pos.Column,pos.Line] = true;
                 }
             }
 
             // Positions to catch enemy piece to right
-            pos = rightDiagonal(Position);
-            if (Board.IsValidPosition(pos) && Board.GetPieceByPosition(pos) != null && Board.GetPieceByPosition(pos).IsWhite != IsWhite)
+            pos = RigthDiagonalSteps(Position);
+            if (Game.Board.IsValidPosition(pos) && Game.Board.GetPieceByPosition(pos) != null && Game.Board.GetPieceByPosition(pos).IsWhite != IsWhite)
             {
-                steps[pos.Line, pos.Column] = true;
+                steps[pos.Column,pos.Line] = true;
             }
             // Position to catch enemy piece to left
-            pos = leftDiagonal(Position);
-            if (Board.IsValidPosition(pos) && Board.GetPieceByPosition(pos) != null! && Board.GetPieceByPosition(pos).IsWhite != IsWhite)
+            pos = LeftDiagonalSteps(Position);
+            if (Game.Board.IsValidPosition(pos) && Game.Board.GetPieceByPosition(pos) != null! && Game.Board.GetPieceByPosition(pos).IsWhite != IsWhite)
             {
-                steps[pos.Line, pos.Column] = true;
+                steps[pos.Column,pos.Line] = true;
             }
 
             // En passant to right
-            pos = rightDiagonal(Position);
-            Pawn? piece = Board.GetPieceByPosition(pos) as Pawn;
-            if (piece != null && piece is Pawn && Board.IsValidPosition(pos) && piece.IsWhite != IsWhite)
+            pos = RigthDiagonalSteps(Position);
+            Pawn? piece = Game.Board.GetPieceByPosition(pos) as Pawn;
+            if (piece != null && piece is Pawn && Game.Board.IsValidPosition(pos) && piece.IsWhite != IsWhite)
             {
-                if (piece.InPassant)
+                if (Game.PawnInPassant.Contains(piece.GetHashCode()))
                 {
-                    steps[pos.Line, pos.Column] = true;
+                    steps[pos.Column,pos.Line] = true;
                 }
             }
 
             // En passant to left
-            pos = leftDiagonal(Position);
-            piece = Board.GetPieceByPosition(pos) as Pawn;
-            if (piece != null && piece is Pawn && Board.IsValidPosition(pos) && piece.IsWhite != IsWhite)
+            pos = LeftDiagonalSteps(Position);
+            piece = Game.Board.GetPieceByPosition(pos) as Pawn;
+            if (piece != null && piece is Pawn && Game.Board.IsValidPosition(pos) && piece.IsWhite != IsWhite)
             {
-                if (piece.InPassant)
+                if (Game.PawnInPassant.Contains(piece.GetHashCode()))
                 {
-                    steps[pos.Line, pos.Column] = true;
+                    steps[pos.Column,pos.Line] = true;
                 }
             }
 
             return steps;
+        }
+
+        private Position OneStepAhead(Position pos)
+        {
+            Position newPosition = new Position(0,0);
+            return IsWhite
+                ? newPosition.ChangePosition(pos.Line -= 1, pos.Column)
+                : newPosition.ChangePosition(pos.Line += 1, pos.Column);
+        }
+
+        private Position TwoStepsAhead(Position pos)
+        {
+            Position newPosition = new Position(0,0);
+                return IsWhite
+                ? newPosition.ChangePosition(pos.Line -= 2, pos.Column)
+                : newPosition.ChangePosition(pos.Line += 2, pos.Column);
+        }
+
+        private Position RigthDiagonalSteps(Position pos)
+        {
+            Position newPosition = new Position(0,0);
+                return IsWhite
+                ? newPosition.ChangePosition(pos.Line -= 1, pos.Column += 1)
+                : newPosition.ChangePosition(pos.Line += 1, pos.Column -= 1);
+        }
+
+        private Position LeftDiagonalSteps(Position pos)
+        {
+            Position newPosition = new Position(0,0);
+                return IsWhite
+                ? newPosition.ChangePosition(pos.Line -= 1, pos.Column -= 1)
+                : newPosition.ChangePosition(pos.Line += 1, pos.Column += 1);
         }
 
         public override string ToString()

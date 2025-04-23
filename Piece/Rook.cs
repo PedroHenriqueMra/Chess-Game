@@ -3,71 +3,84 @@ namespace ChessGame.Piece.Entity
     using ChessGame.Logic.PositionGame;
     using ChessGame.Piece.PieceModel;
     using ChessGame.Table;
+    using ChessGame.Game.main;
 
     public class Rook : Piece
     {
-        public Rook(Board board, bool isWhite, Position position)
-        : base (board, isWhite, position) {}
+        public Rook(Game game, bool isWhite, Position position)
+        : base (game, isWhite, position) {}
 
         public override bool[,] GetPositionsToMove()
         {
-            bool[,] steps = new bool[Board.Lenght[0], Board.Lenght[1]];
+            bool[,] steps = new bool[Game.Board.Lenght[0], Game.Board.Lenght[1]];
             Position pos = new Position();
 
             // up steps
-            pos.ChangePosition(this.Position.Line, this.Position.Column);
+            pos.ChangePosition(this.Position.Column,this.Position.Line);
             for (int i = 0;i < 8;i++)
             {
                 pos.Line--;
-                if (Board.IsValidPosition(pos))
+                if (Game.Board.IsValidPosition(pos))
                 {
-                    if (Board.GetPieceByPosition(pos) == null)
+                    if (Game.Board.GetPieceByPosition(pos) == null)
                     {
                         steps[pos.Column, pos.Line] = true;
+                        continue;
                     }
                 }
+
+                break;
             }
 
             // bottom steps
-            pos.ChangePosition(this.Position.Line, this.Position.Column);
+            pos.ChangePosition(this.Position.Column,this.Position.Line);
             for (int i = 0;i < 8;i++)
             {
                 pos.Line++;
-                if (Board.IsValidPosition(pos))
+                if (Game.Board.IsValidPosition(pos))
                 {
-                    if (Board.GetPieceByPosition(pos) == null)
+                    if (Game.Board.GetPieceByPosition(pos) == null)
                     {
                         steps[pos.Column, pos.Line] = true;
+                        continue;
                     }
                 }
+
+                break;
             }
 
             // right steps
-            pos.ChangePosition(this.Position.Line, this.Position.Column);
+            pos.ChangePosition(this.Position.Column,this.Position.Line);
             for (int i = 0;i < 8;i++)
             {
                 pos.Column++;
-                if (Board.IsValidPosition(pos))
+                if (Game.Board.IsValidPosition(pos))
                 {
-                    if (Board.GetPieceByPosition(pos) == null)
+                    if (Game.Board.GetPieceByPosition(pos) == null)
                     {
                         steps[pos.Column, pos.Line] = true;
+                        continue;
                     }
                 }
+
+                break;
             }
 
             // left steps
-            pos.ChangePosition(this.Position.Line, this.Position.Column);
+            pos.ChangePosition(this.Position.Column,this.Position.Line);
             for (int i = 0;i < 8;i++)
             {
                 pos.Column--;
-                if (Board.IsValidPosition(pos))
+                if (Game.Board.IsValidPosition(pos))
                 {
-                    if (Board.GetPieceByPosition(pos) == null)
+                    if (Game.Board.GetPieceByPosition(pos) == null)
                     {
                         steps[pos.Column, pos.Line] = true;
+                        continue;
                     }
                 }
+
+                break;
             }
 
             return steps;
