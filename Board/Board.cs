@@ -10,7 +10,6 @@ namespace ChessGame.Table
     {
         public Piece[,] Pieces { get; set; }
         public int[] Lenght { get; set; } // [0] == line [1] == column
-        public Game Game { get; set; }
         public Board(int numCol,int numLine)
         {
             Pieces = new Piece[numCol, numLine];
@@ -29,9 +28,21 @@ namespace ChessGame.Table
         {
             if (IsValidPosition(target))
             {
-                Pieces[piece.Position.Column, piece.Position.Line] = null;
-                Pieces[target.Column, target.Line] = piece;
+                this.RemovePiece(piece);
+                this.PutPiece(piece, target);
             }
+        }
+
+        public void PutPiece(Piece piece, Position target)
+        {
+            if (this.GetPieceByPosition(target) == null)
+            {
+                this.Pieces[target.Column, target.Line] = piece;
+            }
+        }
+        public void RemovePiece(Piece piece)
+        {
+            this.Pieces[piece.Position.Column, piece.Position.Line] = null;
         }
 
         public bool IsValidPosition(Position pos)

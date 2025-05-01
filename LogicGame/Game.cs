@@ -7,50 +7,68 @@ namespace ChessGame.Game.main
     using System.Security;
     using ChessGame.Logic.SystemPlayer;
     using System.IO.Pipes;
+    using System.Runtime.InteropServices;
 
     public class Game
     {
         public int Turns { get; set; }
         public bool GameOver { get; set; } = default;
-        public Player PlayerWhite { get; set; }
-        public Player PlayerBlack { get; set; }
+        public Player[] Players { get; set; } = new Player[2];
+        public Player CurrentPlayer { get; set; }
         public Board Board { get; set; }
         public HashSet<int> PawnInPassant { get; set; }
 
-        public Game(Player playerWhite, Player playerBlack)
+        public Game()
         {
-            PlayerWhite = playerWhite;
-            PlayerBlack = playerBlack;
-            
             Board = new Board(8, 8);
+
+            Player playerWhite = new Player(true);
+            Player playerBlack = new Player(false);
+
+            Players[0] = playerWhite;
+            Players[1] = playerBlack;
+            this.CurrentPlayer = playerWhite;
         }
 
         public void ChangeTurn()
         {
             this.Turns += 1;
+
+            this.ChangeCurrentPlayer();
+        }
+
+        private void ChangeCurrentPlayer()
+        {
+            if (Turns % 2 == 0)
+            {
+                CurrentPlayer = Players.First(p => p.IsWhite);
+                return;
+            }
+            
+            CurrentPlayer = Players.First(p => !p.IsWhite);
         }
 
         public void MovePiece(Piece piece, Position target)
         {
             if (piece.IsPossibleToMove(target))
             {
-                if (IsPossibleToCatch(piece, target, out Piece? captured))
+                if (IsPossibleToCatch(piece, target))
                 {
+                    Piece captured = Board.GetPieceByPosition(target);
                     CatchPiece(captured);
                 }
 
                 Board.MovePiece(piece, target);
-                piece.IncreaseMovimente();
+                piece.IncreaseMoviment();
             }
         }
 
-        private bool IsPossibleToCatch(Piece piece, Position target, out Piece? captured)
+        private bool IsPossibleToCatch(Piece piece, Position target)
         {
             // comum catch
             Piece? enemyPiece = Board.GetPieceByPosition(target);
             if (enemyPiece != null)
             {
-                captured = enemyPiece;
                 return true;
             }
 
@@ -60,15 +78,20 @@ namespace ChessGame.Game.main
                 // logic to capture en passant
             }
 
-            captured = null;
             return false;
         }
 
         private void CatchPiece(Piece captured)
         {
-            // logic to record catured pieces
-            return;
+            Board.RemovePiece(captured);
+
+            CurrentPlayer.PiecesYouCatch.Append(captured);
+            CurrentPlayer.AmountPiecesYouCatch++;
+
+            Player enemy = Players.First(p => p.IsWhite != CurrentPlayer.IsWhite);
+            enemy.AmountPieces--;
         }
+
 
         // Is in passant
         public bool IsInPassant(Piece piece)

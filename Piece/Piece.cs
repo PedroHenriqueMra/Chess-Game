@@ -18,7 +18,7 @@ namespace ChessGame.Piece.PieceModel
             Game = game;
         }
 
-        public void IncreaseMovimente()
+        public void IncreaseMoviment()
         {
             this.Moves++; 
         } 

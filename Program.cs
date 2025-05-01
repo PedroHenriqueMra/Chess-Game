@@ -8,12 +8,20 @@ using ChessGame.Logic.SystemPlayer;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 
+
+// knight - ok
+// queen - ok
+// king - ok
+// pawn - ok
+// rook - ok
+// bishop - ok
+
+
 // To state instances
 // Game:
-Player playerWhite = new Player(true);
-Player playerBlack = new Player(false);
-Game game = new Game(playerWhite, playerBlack);
+Game game = new Game();
 
+// white piece
 Piece pieceTest = new Bishop(game, true, new Position(4,3));
 
 // enemy pieces
@@ -24,12 +32,8 @@ game.Board.Pieces[pieceTest.Position.Column, pieceTest.Position.Line] = pieceTes
 game.Board.Pieces[piece1.Position.Column, piece1.Position.Line] = piece1;
 game.Board.Pieces[piece2.Position.Column, piece2.Position.Line] = piece2;
 
-// knight - ok
-// queen - ok
-// king - ok
-// pawn - ok
-// rook - ok
-// bishop - ok
+// moviment to catch
+game.MovePiece(pieceTest, new Position(5,2));
 
 // Draw tests
 var steps = pieceTest.GetPositionsToMove();
@@ -56,6 +60,11 @@ for (int c = 0;c < 8;c++)
     }
     Console.WriteLine("");
 }
+
+Console.WriteLine($"Player-White: {game.Players.First(p => p.IsWhite).AmountPieces}");
+Console.WriteLine($"Player-Black: {game.Players.First(p => !p.IsWhite).AmountPieces}");
+
+
 
 // Puting pieces:
 // White player
