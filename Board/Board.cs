@@ -24,7 +24,7 @@ namespace ChessGame.Table
             return Pieces[position.Column,position.Line];
         }
 
-        public void MovePiece(Piece piece, Position target)
+        public void MovePieceOnBoard(Piece piece, Position target)
         {
             if (IsValidPosition(target))
             {

@@ -9,7 +9,7 @@ namespace ChessGame.Piece.PieceModel
         public Position Position { get; set; }
         public bool IsWhite { get; set; }
         public Game Game { get; protected set; }
-        public int Moves { get; set; }
+        public int Movements { get; set; }
 
         public Piece(Game game, bool isWhite, Position position)
         {
@@ -20,7 +20,7 @@ namespace ChessGame.Piece.PieceModel
 
         public void IncreaseMoviment()
         {
-            this.Moves++; 
+            this.Movements++; 
         } 
 
         public bool IsPossibleToMove(Position pos)

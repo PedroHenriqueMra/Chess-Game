@@ -12,11 +12,12 @@ namespace ChessGame.Game.main
     public class Game
     {
         public int Turns { get; set; }
-        public bool GameOver { get; set; } = default;
+        public bool GameOver { get; private set; } = default;
         public Player[] Players { get; set; } = new Player[2];
-        public Player CurrentPlayer { get; set; }
+        public Player CurrentPlayer { get; private set; }
         public Board Board { get; set; }
-        public HashSet<int> PawnInPassant { get; set; }
+        public Pawn? PawnEnPassant { get; set; }
+        public int? TurnEnPassant { get; set; }
 
         public Game()
         {
@@ -27,7 +28,10 @@ namespace ChessGame.Game.main
 
             Players[0] = playerWhite;
             Players[1] = playerBlack;
-            this.CurrentPlayer = playerWhite;
+            CurrentPlayer = playerWhite;
+
+            PawnEnPassant = null;
+            TurnEnPassant = null;
         }
 
         public void ChangeTurn()
@@ -35,6 +39,13 @@ namespace ChessGame.Game.main
             this.Turns += 1;
 
             this.ChangeCurrentPlayer();
+
+            // clear en passant
+            if (TurnEnPassant != null && Turns != TurnEnPassant)
+            {
+                PawnEnPassant = null;
+                TurnEnPassant = null;
+            }
         }
 
         private void ChangeCurrentPlayer()
@@ -52,30 +63,58 @@ namespace ChessGame.Game.main
         {
             if (piece.IsPossibleToMove(target))
             {
-                if (IsPossibleToCatch(piece, target))
+                if (IsPossibleToCatch(piece, target, out Piece? captured))
                 {
-                    Piece captured = Board.GetPieceByPosition(target);
                     CatchPiece(captured);
                 }
 
-                Board.MovePiece(piece, target);
+                Board.MovePieceOnBoard(piece, target);
                 piece.IncreaseMoviment();
             }
+
+            // throw exception (isn't possible to move)
         }
 
-        private bool IsPossibleToCatch(Piece piece, Position target)
+        private bool IsPossibleToCatch(Piece piece, Position target, out Piece? captured)
         {
-            // comum catch
-            Piece? enemyPiece = Board.GetPieceByPosition(target);
-            if (enemyPiece != null)
-            {
-                return true;
-            }
+            captured = null;
 
             // catch with en passant
             if (piece is Pawn)
             {
+                Pawn pieceAsPawn = piece as Pawn;
                 // logic to capture en passant
+                if (pieceAsPawn.RigthDiagonalSteps(piece.Position).Compare(target) && pieceAsPawn.CheckToRight(piece.Position))
+                {
+                    // check if there's an enemmy pawn to right
+                    Position pos = new Position(piece.Position.Column,piece.Position.Line);
+                    pos = piece.IsWhite
+                            ? pos.ChangePosition(pos.Column += 1, pos.Line)
+                            : pos.ChangePosition(pos.Column -= 1, pos.Line);
+                    
+                    captured = Board.GetPieceByPosition(pos);
+                    return true;
+                }
+
+                if (pieceAsPawn.LeftDiagonalSteps(piece.Position).Compare(target) && pieceAsPawn.CheckToLeft(piece.Position))
+                {
+                    // check if there's an enemmy pawn to left
+                    Position pos = new Position(piece.Position.Column,piece.Position.Line);
+                    pos = piece.IsWhite
+                            ? pos.ChangePosition(pos.Column -= 1, pos.Line)
+                            : pos.ChangePosition(pos.Column += 1, pos.Line);
+                    
+                    captured = Board.GetPieceByPosition(pos);
+                    return true;
+                }
+            }
+            
+            Piece? enemyPiece = Board.GetPieceByPosition(target);
+            // comum catch
+            if (enemyPiece != null && enemyPiece.IsWhite != piece.IsWhite) 
+            {
+                captured = enemyPiece;
+                return true;
             }
 
             return false;
@@ -96,7 +135,7 @@ namespace ChessGame.Game.main
         // Is in passant
         public bool IsInPassant(Piece piece)
         {
-            if (piece.GetHashCode().Equals(this.PawnInPassant))
+            if (PawnEnPassant != null && PawnEnPassant.Equals(piece))
             {
                 return true;
             }
@@ -104,10 +143,9 @@ namespace ChessGame.Game.main
             return false;
         }
 
-        public void InPassantMoviment(Piece pawn)
+        public void InPassantMoviment(Pawn pawn)
         {
-            this.PawnInPassant.Clear();
-            this.PawnInPassant.Add(pawn.GetHashCode());
+            //this.PawnInPassant[];
         }
 
         public bool IsInCheckMate(Position kingCurPos, Position kingTarget, bool isWhite)

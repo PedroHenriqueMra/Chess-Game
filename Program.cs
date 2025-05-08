@@ -22,47 +22,54 @@ using System.ComponentModel;
 Game game = new Game();
 
 // white piece
-Piece pieceTest = new Bishop(game, true, new Position(4,3));
+Pawn pieceTest = new Pawn(game, true, new Position(3,5));
 
 // enemy pieces
-Piece piece1 = new Bishop(game, false, new Position(2,5));
-Piece piece2 = new Bishop(game, false, new Position(4,6));
+Pawn piece1 = new Pawn(game, false, new Position(4,5));
+game.PawnEnPassant = piece1;
+game.TurnEnPassant = 1;
 
 game.Board.Pieces[pieceTest.Position.Column, pieceTest.Position.Line] = pieceTest;
 game.Board.Pieces[piece1.Position.Column, piece1.Position.Line] = piece1;
-game.Board.Pieces[piece2.Position.Column, piece2.Position.Line] = piece2;
+//game.Board.Pieces[piece2.Position.Column, piece2.Position.Line] = piece2;
 
 // moviment to catch
-game.MovePiece(pieceTest, new Position(5,2));
+game.MovePiece(pieceTest, new Position(4,4));
 
 // Draw tests
 var steps = pieceTest.GetPositionsToMove();
-for (int c = 0;c < 8;c++)
+for (int l = 0;l < 8;l++)
 {
-    for (int l = 0;l < 8;l++)
+    for (int c = 0;c < 8;c++)
     {
-        if (!steps[c,l])
+        if (game.Board.Pieces[c,l] != null)
         {
-            if (game.Board.Pieces[c,l] != null)
-            {
-                Console.Write($" {game.Board.Pieces[c,l].ToString()} ");
-            }
-            else
-            {
-                Console.Write(" - ");
-            }
-            
+            Console.Write($" {game.Board.Pieces[c,l].ToString()} ");
+            continue;
         }
-        else
+        
+        if(steps[c,l])
         {
-            Console.Write(" 0 ");
+            var resetColor = Console.BackgroundColor;
+
+            Console.BackgroundColor = ConsoleColor.Yellow;
+            Console.Write(" x ");
+            Console.BackgroundColor = resetColor;
+            continue;
         }
+
+        Console.Write(" - ");
     }
     Console.WriteLine("");
 }
 
+
+
 Console.WriteLine($"Player-White: {game.Players.First(p => p.IsWhite).AmountPieces}");
 Console.WriteLine($"Player-Black: {game.Players.First(p => !p.IsWhite).AmountPieces}");
+
+Console.WriteLine($"Movements white pawn: {pieceTest.Movements}");
+Console.WriteLine($"Movements black pawn: {piece1.Movements}");
 
 
 

@@ -4,6 +4,8 @@ namespace ChessGame.Piece.Entity
     using ChessGame.Piece.PieceModel;
     using ChessGame.Table;
     using ChessGame.Game.main;
+    using System.Linq.Expressions;
+    using System.Security.Cryptography;
 
     public class Bishop : Piece
     {
@@ -23,10 +25,15 @@ namespace ChessGame.Piece.Entity
                 DiagonalRightTop(ref pos);
                 if (Game.Board.IsValidPosition(pos))
                 {
-                    if (Game.Board.GetPieceByPosition(pos) == null)
+                    Piece? getPieceByPos = Game.Board.GetPieceByPosition(pos);
+                    if (getPieceByPos == null)
                     {
                         steps[pos.Column, pos.Line] = true;
                         continue;
+                    }
+                    else if (!getPieceByPos.IsWhite)
+                    {
+                        steps[pos.Column, pos.Line] = true;
                     }
                 }
 
@@ -40,10 +47,15 @@ namespace ChessGame.Piece.Entity
                 DiagonalRightBottom(ref pos);
                 if (Game.Board.IsValidPosition(pos))
                 {
-                    if (Game.Board.GetPieceByPosition(pos) == null)
+                    Piece? getPieceByPos = Game.Board.GetPieceByPosition(pos);
+                    if (getPieceByPos == null)
                     {
                         steps[pos.Column, pos.Line] = true;
                         continue;
+                    }
+                    else if (!getPieceByPos.IsWhite)
+                    {
+                        steps[pos.Column, pos.Line] = true;
                     }
                 }
 
@@ -57,10 +69,15 @@ namespace ChessGame.Piece.Entity
                 DiagonalLeftTop(ref pos);
                 if (Game.Board.IsValidPosition(pos))
                 {
-                    if (Game.Board.GetPieceByPosition(pos) == null)
+                    Piece? getPieceByPos = Game.Board.GetPieceByPosition(pos);
+                    if (getPieceByPos == null)
                     {
                         steps[pos.Column, pos.Line] = true;
                         continue;
+                    }
+                    else if (!getPieceByPos.IsWhite)
+                    {
+                        steps[pos.Column, pos.Line] = true;
                     }
                 }
 
@@ -74,10 +91,15 @@ namespace ChessGame.Piece.Entity
                 DiagonalLeftBottom(ref pos);
                 if (Game.Board.IsValidPosition(pos))
                 {
-                    if (Game.Board.GetPieceByPosition(pos) == null)
+                    Piece? getPieceByPos = Game.Board.GetPieceByPosition(pos);
+                    if (getPieceByPos == null)
                     {
                         steps[pos.Column, pos.Line] = true;
                         continue;
+                    }
+                    else if (!getPieceByPos.IsWhite)
+                    {
+                        steps[pos.Column, pos.Line] = true;
                     }
                 }
 

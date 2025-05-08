@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace ChessGame.Logic.PositionGame;
 
 public struct Position
@@ -21,6 +23,13 @@ public struct Position
     public bool IsInBoard()
     {
         return Column >= 0 && Column <= 8 && Line >= 0 && Line <= 8;
+    }
+
+
+    public bool Compare(Position position)
+    {
+        return this.Column == position.Column && this.Line == position
+        .Line;
     }
 
     public override string ToString()

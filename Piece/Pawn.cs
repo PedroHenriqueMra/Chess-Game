@@ -24,7 +24,8 @@ namespace ChessGame.Piece.Entity
             {
                 steps[pos.Column,pos.Line] = true;
             }
-            if (Moves == 0)
+
+            if (Movements == 0)
             {
                 pos = TwoStepsAhead(Position);
                 if (Game.Board.IsValidPosition(pos) && Game.Board.GetPieceByPosition(pos) == null)
@@ -46,62 +47,95 @@ namespace ChessGame.Piece.Entity
                 steps[pos.Column,pos.Line] = true;
             }
 
+            // En passant movements
             // En passant to right
-            pos = RigthDiagonalSteps(Position);
-            Pawn? piece = Game.Board.GetPieceByPosition(pos) as Pawn;
-            if (piece != null && piece is Pawn && Game.Board.IsValidPosition(pos) && piece.IsWhite != IsWhite)
+            if (CheckToRight(Position))
             {
-                if (Game.PawnInPassant.Contains(piece.GetHashCode()))
-                {
-                    steps[pos.Column,pos.Line] = true;
-                }
+                pos = RigthDiagonalSteps(Position);
+                steps[pos.Column,pos.Line] = true;
             }
 
             // En passant to left
-            pos = LeftDiagonalSteps(Position);
-            piece = Game.Board.GetPieceByPosition(pos) as Pawn;
-            if (piece != null && piece is Pawn && Game.Board.IsValidPosition(pos) && piece.IsWhite != IsWhite)
+            if (CheckToLeft(Position))
             {
-                if (Game.PawnInPassant.Contains(piece.GetHashCode()))
-                {
-                    steps[pos.Column,pos.Line] = true;
-                }
+                pos = LeftDiagonalSteps(Position);
+                steps[pos.Column,pos.Line] = true;
             }
 
             return steps;
         }
 
-        private Position OneStepAhead(Position pos)
+        public Position OneStepAhead(Position pos)
         {
             Position newPosition = new Position(0,0);
             return IsWhite
-                ? newPosition.ChangePosition(pos.Line -= 1, pos.Column)
-                : newPosition.ChangePosition(pos.Line += 1, pos.Column);
+                ? newPosition.ChangePosition(pos.Column, pos.Line -= 1)
+                : newPosition.ChangePosition(pos.Column, pos.Line += 1);
         }
 
-        private Position TwoStepsAhead(Position pos)
+        public Position TwoStepsAhead(Position pos)
         {
             Position newPosition = new Position(0,0);
                 return IsWhite
-                ? newPosition.ChangePosition(pos.Line -= 2, pos.Column)
-                : newPosition.ChangePosition(pos.Line += 2, pos.Column);
+                ? newPosition.ChangePosition(pos.Column, pos.Line -= 2)
+                : newPosition.ChangePosition(pos.Column, pos.Line += 2);
         }
 
-        private Position RigthDiagonalSteps(Position pos)
+        public Position RigthDiagonalSteps(Position pos)
         {
             Position newPosition = new Position(0,0);
                 return IsWhite
-                ? newPosition.ChangePosition(pos.Line -= 1, pos.Column += 1)
-                : newPosition.ChangePosition(pos.Line += 1, pos.Column -= 1);
+                ? newPosition.ChangePosition(pos.Column += 1, pos.Line -= 1)
+                : newPosition.ChangePosition(pos.Column -= 1, pos.Line += 1);
         }
 
-        private Position LeftDiagonalSteps(Position pos)
+        public Position LeftDiagonalSteps(Position pos)
         {
             Position newPosition = new Position(0,0);
                 return IsWhite
-                ? newPosition.ChangePosition(pos.Line -= 1, pos.Column -= 1)
-                : newPosition.ChangePosition(pos.Line += 1, pos.Column += 1);
+                ? newPosition.ChangePosition(pos.Column -= 1, pos.Line -= 1)
+                : newPosition.ChangePosition(pos.Column += 1, pos.Line += 1);
         }
+
+        // check enemy pieces En Passant 
+        public bool CheckToRight(Position pos)
+        {
+            Position posToCheck = 
+                IsWhite
+                ? pos.ChangePosition(pos.Column += 1, pos.Line)
+                : pos.ChangePosition(pos.Column -= 1, pos.Line);
+
+            Piece? enemyPiece = Game.Board.GetPieceByPosition(posToCheck);
+            if (enemyPiece != null && enemyPiece.IsWhite != this.IsWhite)
+            {
+                if (Game.PawnEnPassant != null && Game.PawnEnPassant.Equals(enemyPiece))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool CheckToLeft(Position pos)
+        {
+            Position posToCheck = 
+                IsWhite
+                ? pos.ChangePosition(pos.Column -= 1, pos.Line)
+                : pos.ChangePosition(pos.Column += 1, pos.Line);
+
+            Piece? enemyPiece = Game.Board.GetPieceByPosition(posToCheck);
+            if (enemyPiece != null && enemyPiece.IsWhite != this.IsWhite)
+            {
+                if (Game.PawnEnPassant != null && Game.PawnEnPassant.Equals(enemyPiece))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 
         public override string ToString()
         {
