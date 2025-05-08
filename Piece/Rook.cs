@@ -22,10 +22,16 @@ namespace ChessGame.Piece.Entity
                 pos.Line--;
                 if (Game.Board.IsValidPosition(pos))
                 {
-                    if (Game.Board.GetPieceByPosition(pos) == null)
+                    Piece? enemyPiece = Game.Board.GetPieceByPosition(pos);
+                    if (enemyPiece == null)
                     {
                         steps[pos.Column, pos.Line] = true;
                         continue;
+                    }
+
+                    if (enemyPiece.IsWhite != IsWhite)
+                    {
+                        steps[pos.Column, pos.Line] = true;
                     }
                 }
 
@@ -39,10 +45,16 @@ namespace ChessGame.Piece.Entity
                 pos.Line++;
                 if (Game.Board.IsValidPosition(pos))
                 {
-                    if (Game.Board.GetPieceByPosition(pos) == null)
+                    Piece? enemyPiece = Game.Board.GetPieceByPosition(pos);
+                    if (enemyPiece == null)
                     {
                         steps[pos.Column, pos.Line] = true;
                         continue;
+                    }
+
+                    if (enemyPiece.IsWhite != IsWhite)
+                    {
+                        steps[pos.Column, pos.Line] = true;
                     }
                 }
 
@@ -56,10 +68,16 @@ namespace ChessGame.Piece.Entity
                 pos.Column++;
                 if (Game.Board.IsValidPosition(pos))
                 {
-                    if (Game.Board.GetPieceByPosition(pos) == null)
+                    Piece? enemyPiece = Game.Board.GetPieceByPosition(pos);
+                    if (enemyPiece == null)
                     {
                         steps[pos.Column, pos.Line] = true;
                         continue;
+                    }
+
+                    if (enemyPiece.IsWhite != IsWhite)
+                    {
+                        steps[pos.Column, pos.Line] = true;
                     }
                 }
 
@@ -73,10 +91,16 @@ namespace ChessGame.Piece.Entity
                 pos.Column--;
                 if (Game.Board.IsValidPosition(pos))
                 {
-                    if (Game.Board.GetPieceByPosition(pos) == null)
+                    Piece? enemyPiece = Game.Board.GetPieceByPosition(pos);
+                    if (enemyPiece == null)
                     {
                         steps[pos.Column, pos.Line] = true;
                         continue;
+                    }
+
+                    if (enemyPiece.IsWhite != IsWhite)
+                    {
+                        steps[pos.Column, pos.Line] = true;
                     }
                 }
 

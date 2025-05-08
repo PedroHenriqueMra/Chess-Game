@@ -8,6 +8,7 @@ namespace ChessGame.Game.main
     using ChessGame.Logic.SystemPlayer;
     using System.IO.Pipes;
     using System.Runtime.InteropServices;
+    using System.Security.Cryptography;
 
     public class Game
     {
@@ -16,12 +17,13 @@ namespace ChessGame.Game.main
         public Player[] Players { get; set; } = new Player[2];
         public Player CurrentPlayer { get; private set; }
         public Board Board { get; set; }
-        public Pawn? PawnEnPassant { get; set; }
-        public int? TurnEnPassant { get; set; }
+        public Pawn? PawnEnPassant { get; private set; }
+        public int? TurnEnPassant { get; private set; }
 
         public Game()
         {
             Board = new Board(8, 8);
+            Turns = 0;
 
             Player playerWhite = new Player(true);
             Player playerBlack = new Player(false);
@@ -43,8 +45,7 @@ namespace ChessGame.Game.main
             // clear en passant
             if (TurnEnPassant != null && Turns != TurnEnPassant)
             {
-                PawnEnPassant = null;
-                TurnEnPassant = null;
+                ClearEnPassant();
             }
         }
 
@@ -68,8 +69,19 @@ namespace ChessGame.Game.main
                     CatchPiece(captured);
                 }
 
+                if (piece is Pawn)
+                {
+                    // checks if the pawn has made two moves (this is an En Passant case)
+                    Pawn pieceAsPawn = piece as Pawn;
+                    if (target.Compare(pieceAsPawn.TwoStepsAhead(pieceAsPawn.Position)))
+                    {
+                        EnPassantMoviment(pieceAsPawn);
+                    }
+                }
+
                 Board.MovePieceOnBoard(piece, target);
                 piece.IncreaseMoviment();
+                piece.ChangePosition(target);
             }
 
             // throw exception (isn't possible to move)
@@ -131,7 +143,6 @@ namespace ChessGame.Game.main
             enemy.AmountPieces--;
         }
 
-
         // Is in passant
         public bool IsInPassant(Piece piece)
         {
@@ -143,9 +154,17 @@ namespace ChessGame.Game.main
             return false;
         }
 
-        public void InPassantMoviment(Pawn pawn)
+        private void EnPassantMoviment(Pawn pawn)
         {
-            //this.PawnInPassant[];
+            this.PawnEnPassant = pawn;
+            this.TurnEnPassant = Turns;
+            this.TurnEnPassant++; // "TurnEnPassant++" cause the En Passant lasts for the next turn and not the current one
+        }
+
+        private void ClearEnPassant()
+        {
+            this.PawnEnPassant = null;
+            this.TurnEnPassant = null;
         }
 
         public bool IsInCheckMate(Position kingCurPos, Position kingTarget, bool isWhite)

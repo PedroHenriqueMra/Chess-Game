@@ -21,7 +21,12 @@ namespace ChessGame.Piece.PieceModel
         public void IncreaseMoviment()
         {
             this.Movements++; 
-        } 
+        }
+
+        public void ChangePosition(Position newPos)
+        {
+            this.Position = newPos;
+        }
 
         public bool IsPossibleToMove(Position pos)
         {
