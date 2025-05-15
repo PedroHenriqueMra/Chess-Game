@@ -31,7 +31,7 @@ namespace ChessGame.Piece.Entity
                         steps[pos.Column, pos.Line] = true;
                         continue;
                     }
-                    else if (!getPieceByPos.IsWhite)
+                    else if (getPieceByPos.IsWhite != IsWhite)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -53,7 +53,7 @@ namespace ChessGame.Piece.Entity
                         steps[pos.Column, pos.Line] = true;
                         continue;
                     }
-                    else if (!getPieceByPos.IsWhite)
+                    else if (getPieceByPos.IsWhite != IsWhite)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -75,7 +75,7 @@ namespace ChessGame.Piece.Entity
                         steps[pos.Column, pos.Line] = true;
                         continue;
                     }
-                    else if (!getPieceByPos.IsWhite)
+                    else if (getPieceByPos.IsWhite != IsWhite)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -97,7 +97,7 @@ namespace ChessGame.Piece.Entity
                         steps[pos.Column, pos.Line] = true;
                         continue;
                     }
-                    else if (!getPieceByPos.IsWhite)
+                    else if (getPieceByPos.IsWhite != IsWhite)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -131,6 +131,15 @@ namespace ChessGame.Piece.Entity
         {
             currentyPos.Column--;
             currentyPos.Line++;
+        }
+
+        public override Piece Clone()
+        {
+            return new Bishop(
+                Game = this.Game,
+                IsWhite = this.IsWhite,
+                Position = new Position(this.Position.Column,this.Position.Line)
+            );
         }
 
         public override string ToString()

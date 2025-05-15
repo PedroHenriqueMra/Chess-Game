@@ -20,7 +20,8 @@ namespace ChessGame.Piece.Entity
 
             // Positions to move piece
             pos = OneStepAhead(Position);
-            if (Game.Board.IsValidPosition(pos) && Game.Board.GetPieceByPosition(pos) == null)
+            Piece? enemyPiece = Game.Board.GetPieceByPosition(pos);
+            if (Game.Board.IsValidPosition(pos) && enemyPiece == null)
             {
                 steps[pos.Column,pos.Line] = true;
             }
@@ -28,7 +29,8 @@ namespace ChessGame.Piece.Entity
             if (Movements == 0)
             {
                 pos = TwoStepsAhead(Position);
-                if (Game.Board.IsValidPosition(pos) && Game.Board.GetPieceByPosition(pos) == null)
+                enemyPiece = Game.Board.GetPieceByPosition(pos);
+                if (Game.Board.IsValidPosition(pos) && enemyPiece == null)
                 {
                     steps[pos.Column,pos.Line] = true;
                 }
@@ -36,13 +38,15 @@ namespace ChessGame.Piece.Entity
 
             // Positions to catch enemy piece to right
             pos = RigthDiagonalSteps(Position);
-            if (Game.Board.IsValidPosition(pos) && Game.Board.GetPieceByPosition(pos) != null && Game.Board.GetPieceByPosition(pos).IsWhite != IsWhite)
+            enemyPiece = Game.Board.GetPieceByPosition(pos);
+            if (Game.Board.IsValidPosition(pos) && enemyPiece != null && enemyPiece.IsWhite != IsWhite)
             {
                 steps[pos.Column,pos.Line] = true;
             }
             // Position to catch enemy piece to left
             pos = LeftDiagonalSteps(Position);
-            if (Game.Board.IsValidPosition(pos) && Game.Board.GetPieceByPosition(pos) != null! && Game.Board.GetPieceByPosition(pos).IsWhite != IsWhite)
+            enemyPiece = Game.Board.GetPieceByPosition(pos);
+            if (Game.Board.IsValidPosition(pos) && enemyPiece != null! && enemyPiece.IsWhite != IsWhite)
             {
                 steps[pos.Column,pos.Line] = true;
             }
@@ -136,6 +140,14 @@ namespace ChessGame.Piece.Entity
             return false;
         }
 
+        public override Piece Clone()
+        {
+            return new Pawn(
+                Game = this.Game,
+                IsWhite = this.IsWhite,
+                Position = new Position(this.Position.Column,this.Position.Line)
+            );
+        }
 
         public override string ToString()
         {

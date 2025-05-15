@@ -22,7 +22,7 @@ public struct Position
 
     public bool IsInBoard()
     {
-        return Column >= 0 && Column <= 8 && Line >= 0 && Line <= 8;
+        return Column >= 0 && Column <= 7 && Line >= 0 && Line <= 7;
     }
 
 

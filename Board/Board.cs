@@ -57,5 +57,10 @@ namespace ChessGame.Table
                 return false;
             } 
         }
+
+        public FakeBoard FakeBoardEnviroument()
+        {
+            return new FakeBoard(this);
+        }
     }
 }

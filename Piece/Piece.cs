@@ -35,6 +35,8 @@ namespace ChessGame.Piece.PieceModel
             return moves[pos.Column,pos.Line];
         }
 
+        public abstract Piece Clone();
+
         public abstract bool[,] GetPositionsToMove();
 
         public override int GetHashCode()

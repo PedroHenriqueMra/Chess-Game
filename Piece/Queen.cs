@@ -29,6 +29,15 @@ namespace ChessGame.Piece.Entity
             return steps;
         }
 
+        public override Piece Clone()
+        {
+            return new Queen(
+                Game = this.Game,
+                IsWhite = this.IsWhite,
+                Position = new Position(this.Position.Column,this.Position.Line)
+            );
+        }
+
         public override string ToString()
         {
             if (this.IsWhite) return "Q";
