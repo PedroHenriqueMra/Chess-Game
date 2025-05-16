@@ -2,10 +2,7 @@ namespace ChessGame.Piece.Entity
 {
     using ChessGame.Logic.PositionGame;
     using ChessGame.Piece.PieceModel;
-    using ChessGame.Table;
-    using ChessGame.Game.main;
-    using System.Linq.Expressions;
-    using System.Security.Cryptography;
+    using ChessGame.Logic.Game;
 
     public class Bishop : Piece
     {

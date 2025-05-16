@@ -1,8 +1,7 @@
 namespace ChessGame.Piece.PieceModel
 {
     using ChessGame.Logic.PositionGame;
-    using ChessGame.Table;
-    using ChessGame.Game.main;
+    using ChessGame.Logic.Game;
 
     public abstract class Piece
     {

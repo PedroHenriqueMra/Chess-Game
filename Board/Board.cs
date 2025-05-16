@@ -2,9 +2,6 @@ namespace ChessGame.Table
 {
     using ChessGame.Piece.PieceModel;
     using ChessGame.Logic.PositionGame;
-    using Wacton.Unicolour;
-    using ChessGame.Logic.SystemPlayer;
-    using ChessGame.Game.main;
 
     public class Board
     {

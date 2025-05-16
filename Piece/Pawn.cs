@@ -4,7 +4,7 @@ namespace ChessGame.Piece.Entity
 {
     using ChessGame.Logic.PositionGame;
     using ChessGame.Piece.PieceModel;
-    using ChessGame.Game.main;
+    using ChessGame.Logic.Game;
 
     public class Pawn : Piece
     {
