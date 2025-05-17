@@ -37,6 +37,11 @@ public struct Position
         .Line;
     }
 
+    public bool Compare(int column, int line)
+    {
+        return Column == column && Line == line;
+    }
+
     public override string ToString()
     {
         return $"C:{this.Column} - L:{this.Line}";

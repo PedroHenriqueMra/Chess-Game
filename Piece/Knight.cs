@@ -3,11 +3,12 @@ namespace ChessGame.Piece.Entity
     using ChessGame.Logic.PositionGame;
     using ChessGame.Piece.PieceModel;
     using ChessGame.Logic.Game;
+    using ChessGame.Logic.Player.Color;
 
     public class Knight : Piece
     {
-        public Knight(Game game, bool isWhite, Position position)
-        : base (game, isWhite, position) {}
+        public Knight(Game game, PlayerColor color, Position position)
+        : base (game, color, position) {}
 
         public override bool[,] GetPositionsToMove()
         {
@@ -21,7 +22,7 @@ namespace ChessGame.Piece.Entity
             if (Game.Board.IsValidPosition(pos))
             {
                 Piece? piece = Game.Board.GetPieceByPosition(pos);
-                if (piece == null || !piece.IsWhite)
+                if (piece == null || piece.Color != this.Color)
                 {
                     steps[pos.Column,pos.Line] = true;
                 }
@@ -34,7 +35,7 @@ namespace ChessGame.Piece.Entity
             if (Game.Board.IsValidPosition(pos))
             {
                 Piece? piece = Game.Board.GetPieceByPosition(pos);
-                if (piece == null || !piece.IsWhite)
+                if (piece == null || piece.Color != this.Color)
                 {
                     steps[pos.Column,pos.Line] = true;
                 }
@@ -47,7 +48,7 @@ namespace ChessGame.Piece.Entity
             if (Game.Board.IsValidPosition(pos))
             {
                 Piece? piece = Game.Board.GetPieceByPosition(pos);
-                if (piece == null || !piece.IsWhite)
+                if (piece == null || piece.Color != this.Color)
                 {
                     steps[pos.Column,pos.Line] = true;
                 }
@@ -60,7 +61,7 @@ namespace ChessGame.Piece.Entity
             if (Game.Board.IsValidPosition(pos))
             {
                 Piece? piece = Game.Board.GetPieceByPosition(pos);
-                if (piece == null || !piece.IsWhite)
+                if (piece == null || piece.Color != this.Color)
                 {
                     steps[pos.Column,pos.Line] = true;
                 }
@@ -73,7 +74,7 @@ namespace ChessGame.Piece.Entity
             if (Game.Board.IsValidPosition(pos))
             {
                 Piece? piece = Game.Board.GetPieceByPosition(pos);
-                if (piece == null || !piece.IsWhite)
+                if (piece == null || piece.Color != this.Color)
                 {
                     steps[pos.Column,pos.Line] = true;
                 }
@@ -86,7 +87,7 @@ namespace ChessGame.Piece.Entity
             if (Game.Board.IsValidPosition(pos))
             {
                 Piece? piece = Game.Board.GetPieceByPosition(pos);
-                if (piece == null || !piece.IsWhite)
+                if (piece == null || piece.Color != this.Color)
                 {
                     steps[pos.Column,pos.Line] = true;
                 }
@@ -99,7 +100,7 @@ namespace ChessGame.Piece.Entity
             if (Game.Board.IsValidPosition(pos))
             {
                 Piece? piece = Game.Board.GetPieceByPosition(pos);
-                if (piece == null || !piece.IsWhite)
+                if (piece == null || piece.Color != this.Color)
                 {
                     steps[pos.Column,pos.Line] = true;
                 }
@@ -112,7 +113,7 @@ namespace ChessGame.Piece.Entity
             if (Game.Board.IsValidPosition(pos))
             {
                 Piece? piece = Game.Board.GetPieceByPosition(pos);
-                if (piece == null || !piece.IsWhite)
+                if (piece == null || piece.Color != this.Color)
                 {
                     steps[pos.Column,pos.Line] = true;
                 }
@@ -125,14 +126,14 @@ namespace ChessGame.Piece.Entity
         {
             return new Knight(
                 Game = this.Game,
-                IsWhite = this.IsWhite,
+                Color = this.Color,
                 Position = new Position(this.Position.Column,this.Position.Line)
             );
         }
 
         public override string ToString()
         {
-            if (this.IsWhite) return "H";
+            if (this.Color == PlayerColor.White) return "H";
 
             return "h";
         }

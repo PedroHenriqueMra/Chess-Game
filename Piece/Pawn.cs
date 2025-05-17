@@ -5,11 +5,12 @@ namespace ChessGame.Piece.Entity
     using ChessGame.Logic.PositionGame;
     using ChessGame.Piece.PieceModel;
     using ChessGame.Logic.Game;
+    using ChessGame.Logic.Player.Color;
 
     public class Pawn : Piece
     {
-        public Pawn(Game game, bool isWhite, Position position)
-        : base(game, isWhite, position) { }
+        public Pawn(Game game, PlayerColor color, Position position)
+        : base(game, color, position) { }
 
         // plus line = get down on the board
         // minus line = get up on the board
@@ -39,14 +40,14 @@ namespace ChessGame.Piece.Entity
             // Positions to catch enemy piece to right
             pos = RigthDiagonalSteps(Position);
             enemyPiece = Game.Board.GetPieceByPosition(pos);
-            if (Game.Board.IsValidPosition(pos) && enemyPiece != null && enemyPiece.IsWhite != IsWhite)
+            if (Game.Board.IsValidPosition(pos) && enemyPiece != null && enemyPiece.Color != PlayerColor.White)
             {
                 steps[pos.Column,pos.Line] = true;
             }
             // Position to catch enemy piece to left
             pos = LeftDiagonalSteps(Position);
             enemyPiece = Game.Board.GetPieceByPosition(pos);
-            if (Game.Board.IsValidPosition(pos) && enemyPiece != null! && enemyPiece.IsWhite != IsWhite)
+            if (Game.Board.IsValidPosition(pos) && enemyPiece != null! && enemyPiece.Color != PlayerColor.White)
             {
                 steps[pos.Column,pos.Line] = true;
             }
@@ -72,7 +73,7 @@ namespace ChessGame.Piece.Entity
         public Position OneStepAhead(Position pos)
         {
             Position newPosition = new Position(0,0);
-            return IsWhite
+            return Color == PlayerColor.White
                 ? newPosition.ChangePosition(pos.Column, pos.Line -= 1)
                 : newPosition.ChangePosition(pos.Column, pos.Line += 1);
         }
@@ -80,7 +81,7 @@ namespace ChessGame.Piece.Entity
         public Position TwoStepsAhead(Position pos)
         {
             Position newPosition = new Position(0,0);
-                return IsWhite
+                return Color == PlayerColor.White
                 ? newPosition.ChangePosition(pos.Column, pos.Line -= 2)
                 : newPosition.ChangePosition(pos.Column, pos.Line += 2);
         }
@@ -88,7 +89,7 @@ namespace ChessGame.Piece.Entity
         public Position RigthDiagonalSteps(Position pos)
         {
             Position newPosition = new Position(0,0);
-                return IsWhite
+                return Color == PlayerColor.White
                 ? newPosition.ChangePosition(pos.Column += 1, pos.Line -= 1)
                 : newPosition.ChangePosition(pos.Column -= 1, pos.Line += 1);
         }
@@ -96,7 +97,7 @@ namespace ChessGame.Piece.Entity
         public Position LeftDiagonalSteps(Position pos)
         {
             Position newPosition = new Position(0,0);
-                return IsWhite
+                return Color == PlayerColor.White
                 ? newPosition.ChangePosition(pos.Column -= 1, pos.Line -= 1)
                 : newPosition.ChangePosition(pos.Column += 1, pos.Line += 1);
         }
@@ -105,12 +106,12 @@ namespace ChessGame.Piece.Entity
         public bool CheckToRight(Position pos)
         {
             Position posToCheck = 
-                IsWhite
+                Color == PlayerColor.White
                 ? pos.ChangePosition(pos.Column += 1, pos.Line)
                 : pos.ChangePosition(pos.Column -= 1, pos.Line);
 
             Piece? enemyPiece = Game.Board.GetPieceByPosition(posToCheck);
-            if (enemyPiece != null && enemyPiece.IsWhite != this.IsWhite)
+            if (enemyPiece != null && enemyPiece.Color != this.Color)
             {
                 if (Game.PawnEnPassant != null && Game.PawnEnPassant.Equals(enemyPiece))
                 {
@@ -124,12 +125,12 @@ namespace ChessGame.Piece.Entity
         public bool CheckToLeft(Position pos)
         {
             Position posToCheck = 
-                IsWhite
+                Color == PlayerColor.White
                 ? pos.ChangePosition(pos.Column -= 1, pos.Line)
                 : pos.ChangePosition(pos.Column += 1, pos.Line);
 
             Piece? enemyPiece = Game.Board.GetPieceByPosition(posToCheck);
-            if (enemyPiece != null && enemyPiece.IsWhite != this.IsWhite)
+            if (enemyPiece != null && enemyPiece.Color != this.Color)
             {
                 if (Game.PawnEnPassant != null && Game.PawnEnPassant.Equals(enemyPiece))
                 {
@@ -144,14 +145,14 @@ namespace ChessGame.Piece.Entity
         {
             return new Pawn(
                 Game = this.Game,
-                IsWhite = this.IsWhite,
+                Color = this.Color,
                 Position = new Position(this.Position.Column,this.Position.Line)
             );
         }
 
         public override string ToString()
         {
-            if (this.IsWhite) return "P";
+            if (this.Color == PlayerColor.White) return "P";
 
             return "p";
         }

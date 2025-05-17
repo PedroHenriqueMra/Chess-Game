@@ -4,6 +4,10 @@ namespace ChessGame.Table.Draw
     using ChessGame.Logic.Game;
     using ChessGame.Logic.PositionGame;
     using ChessGame.Table;
+    using ChessGame.Piece.PieceModel;
+    using System.ComponentModel;
+    using ChessGame.Logic.Player.PlayerEntity;
+    using ChessGame.Logic.Player.Color;
 
     public class DrawGame
     {
@@ -19,8 +23,10 @@ namespace ChessGame.Table.Draw
             Board = board;
         }
 
-        public void DrawBoard()
+        public void DrawOptions(bool[,] options)
         {
+            ClearScreen();
+
             for (int l = 0; l < 8; l++)
             {
                 for (int c = 0; c < 8; c++)
@@ -28,80 +34,14 @@ namespace ChessGame.Table.Draw
                     if (c == 0)
                         Console.Write($" {LineNumbers[l]}");
 
-                    if (Board.Pieces[c, l] != null)
-                        Console.Write($" {Board.Pieces[c, l]} ");
-                    else
-                        Console.Write(" - ");
-                }
+                    // Set color
+                    if (options[c, l]) Console.BackgroundColor = ConsoleColor.Gray;
 
-                Console.WriteLine("");
-            }
-
-            for (int cl = 0; cl < ColumnLirycs.Length; cl++)
-            {
-                if (cl == 0)
-                    Console.Write(" X");
-
-                Console.Write($" {ColumnLirycs[cl]} ");
-            }  
-
-            Console.WriteLine("");
-        }
-
-        public void DrawPlayPiece(Position piecePos, bool[,] playPiece)
-        {
-            for (int l = 0; l < 8; l++)
-            {
-                for (int c = 0; c < 8; c++)
-                {
-                    if (c == 0)
-                        Console.Write($" {LineNumbers[l]}");
-
-                    if (playPiece[c, l])
-                        Console.BackgroundColor = Board.Pieces[c, l] != null ? ConsoleColor.Red : ConsoleColor.Yellow;
-
+                    // Draw board
                     if (Board.Pieces[c, l] != null)
                     {
-                        if (c == piecePos.Column && l == piecePos.Line)
-                            Console.BackgroundColor = ConsoleColor.Gray;
-
                         Console.Write($" {Board.Pieces[c, l]} ");
-                        Console.ResetColor();
-                        continue;
                     }
-
-                    Console.Write(" - ");
-                    Console.ResetColor();
-                }
-
-                Console.WriteLine("");
-            }
-
-            for (int cl = 0; cl < ColumnLirycs.Length; cl++)
-            {
-                if (cl == 0)
-                    Console.Write(" X");
-
-                Console.Write($" {ColumnLirycs[cl]} ");
-            } 
-
-            Console.WriteLine("");
-        }
-        
-        public void DrawPlayOptions(bool[,] options)
-        {
-            for (int l = 0; l < 8; l++)
-            {
-                for (int c = 0; c < 8; c++)
-                {
-                    if (options[c, l])
-                        Console.BackgroundColor = ConsoleColor.Gray;
-
-                    if (c == 0)
-                        Console.Write($" {LineNumbers[l]}");
-
-                    if (Board.Pieces[c, l] != null)
-                        Console.Write($" {Board.Pieces[c, l]} ");
                     else
                         Console.Write(" - ");
 
@@ -119,27 +59,84 @@ namespace ChessGame.Table.Draw
                 Console.Write($" {ColumnLirycs[cl]} ");
             }
 
-            Console.WriteLine("");
+            Console.WriteLine("\n");
         }
 
-        public void DrawMessage()
+        public void DrawBoard(Piece pieceSelected, bool[,] steps)
         {
+            ClearScreen();
 
+            for (int l = 0; l < 8; l++)
+            {
+                for (int c = 0; c < 8; c++)
+                {
+                    if (c == 0)
+                        Console.Write($" {LineNumbers[l]}");
+
+                    // Set color
+                    ConsoleColor consoleColor = Console.BackgroundColor;
+                    if (pieceSelected.Position.Compare(c, l))
+                        consoleColor = ConsoleColor.Gray;
+
+                    if (steps[c, l])
+                        consoleColor = Board.Pieces[c, l] == null ? ConsoleColor.Yellow : ConsoleColor.Red;
+
+                    Console.BackgroundColor = consoleColor;
+
+                    // Draw board
+                    if (Board.Pieces[c, l] != null)
+                    {
+                        Console.Write($" {Board.Pieces[c, l]} ");
+                    }
+                    else
+                        Console.Write(" - ");
+
+                    Console.ResetColor();
+                }
+
+                Console.WriteLine("");
+            }
+
+            for (int cl = 0; cl < ColumnLirycs.Length; cl++)
+            {
+                if (cl == 0)
+                    Console.Write(" X");
+
+                Console.Write($" {ColumnLirycs[cl]} ");
+            }
+            Console.WriteLine("\n");
         }
 
-        public void DrawInfo()
-        {
 
+
+        public void DrawMessage(string message)
+        {
         }
 
-        public void DrawGameResult()
+        public void DrawInfo(Player player)
         {
+            Console.WriteLine("-------------------------------");
+            Console.WriteLine($"Vez de /{player}/");
+            Console.WriteLine("Informations:");
+            Console.WriteLine($"Number of pieces: {player.AmountPieces}");
+            Console.WriteLine($"Number of pieces catched: {player.AmountPiecesYouCatch}");
+            Console.WriteLine("-------------------------------");
+        }
 
+        public void DrawGameResult(bool whiteIsWinner)
+        {
+            string winnerMessage = whiteIsWinner ? "Parabens!!. Você ganhou." : "Você perdeu!.";
+            ConsoleColor backgroundColor = whiteIsWinner ? ConsoleColor.DarkGreen : ConsoleColor.Red;
+
+            Console.BackgroundColor = backgroundColor;
+            Console.WriteLine(winnerMessage);
+            Console.ResetColor();
         }
 
         public void ClearScreen()
         {
             Console.Clear();
+            Console.WriteLine("");
         }
     }
 

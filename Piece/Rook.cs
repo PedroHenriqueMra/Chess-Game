@@ -3,11 +3,12 @@ namespace ChessGame.Piece.Entity
     using ChessGame.Logic.PositionGame;
     using ChessGame.Piece.PieceModel;
     using ChessGame.Logic.Game;
+    using ChessGame.Logic.Player.Color;
 
     public class Rook : Piece
     {
-        public Rook(Game game, bool isWhite, Position position)
-        : base (game, isWhite, position) {}
+        public Rook(Game game, PlayerColor color, Position position)
+        : base (game, color, position) {}
 
         public override bool[,] GetPositionsToMove()
         {
@@ -28,7 +29,7 @@ namespace ChessGame.Piece.Entity
                         continue;
                     }
 
-                    if (enemyPiece.IsWhite != IsWhite)
+                    if (enemyPiece.Color != PlayerColor.White)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -51,7 +52,7 @@ namespace ChessGame.Piece.Entity
                         continue;
                     }
 
-                    if (enemyPiece.IsWhite != IsWhite)
+                    if (enemyPiece.Color != PlayerColor.White)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -74,7 +75,7 @@ namespace ChessGame.Piece.Entity
                         continue;
                     }
 
-                    if (enemyPiece.IsWhite != IsWhite)
+                    if (enemyPiece.Color != PlayerColor.White)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -97,7 +98,7 @@ namespace ChessGame.Piece.Entity
                         continue;
                     }
 
-                    if (enemyPiece.IsWhite != IsWhite)
+                    if (enemyPiece.Color != PlayerColor.White)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -113,14 +114,14 @@ namespace ChessGame.Piece.Entity
         {
             return new Rook(
                 Game = this.Game,
-                IsWhite = this.IsWhite,
+                Color = this.Color,
                 Position = new Position(this.Position.Column,this.Position.Line)
             );
         }
 
         public override string ToString()
         {
-            if (this.IsWhite) return "R";
+            if (this.Color == PlayerColor.White) return "R";
 
             return "r";
         }

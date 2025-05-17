@@ -3,11 +3,12 @@ namespace ChessGame.Piece.Entity
     using ChessGame.Logic.PositionGame;
     using ChessGame.Piece.PieceModel;
     using ChessGame.Logic.Game;
+    using ChessGame.Logic.Player.Color;
 
     public class Bishop : Piece
     {
-        public Bishop(Game game, bool isWhite, Position position)
-        : base (game, isWhite, position) {}
+        public Bishop(Game game, PlayerColor color, Position position)
+        : base (game, color, position) {}
 
 
         public override bool[,] GetPositionsToMove()
@@ -28,7 +29,7 @@ namespace ChessGame.Piece.Entity
                         steps[pos.Column, pos.Line] = true;
                         continue;
                     }
-                    else if (getPieceByPos.IsWhite != IsWhite)
+                    else if (getPieceByPos.Color != this.Color)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -50,7 +51,7 @@ namespace ChessGame.Piece.Entity
                         steps[pos.Column, pos.Line] = true;
                         continue;
                     }
-                    else if (getPieceByPos.IsWhite != IsWhite)
+                    else if (getPieceByPos.Color != this.Color)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -72,7 +73,7 @@ namespace ChessGame.Piece.Entity
                         steps[pos.Column, pos.Line] = true;
                         continue;
                     }
-                    else if (getPieceByPos.IsWhite != IsWhite)
+                    else if (getPieceByPos.Color != this.Color)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -94,7 +95,7 @@ namespace ChessGame.Piece.Entity
                         steps[pos.Column, pos.Line] = true;
                         continue;
                     }
-                    else if (getPieceByPos.IsWhite != IsWhite)
+                    else if (getPieceByPos.Color != this.Color)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -134,14 +135,14 @@ namespace ChessGame.Piece.Entity
         {
             return new Bishop(
                 Game = this.Game,
-                IsWhite = this.IsWhite,
+                Color = this.Color,
                 Position = new Position(this.Position.Column,this.Position.Line)
             );
         }
 
         public override string ToString()
         {
-            if (this.IsWhite) return "B";
+            if (this.Color == PlayerColor.White) return "B";
 
             return "b";
         }

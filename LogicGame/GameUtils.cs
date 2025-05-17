@@ -80,5 +80,6 @@ namespace ChessGame.Logic.Service
 
             return path;
         }
+
     }
 }

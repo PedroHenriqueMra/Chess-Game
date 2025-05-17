@@ -3,11 +3,12 @@ namespace ChessGame.Piece.Entity
     using ChessGame.Logic.PositionGame;
     using ChessGame.Piece.PieceModel;
     using ChessGame.Logic.Game;
+    using ChessGame.Logic.Player.Color;
 
     public class King : Piece
     {
-        public King(Game game, bool isWhite, Position position)
-        : base (game, isWhite, position) {}
+        public King(Game game, PlayerColor color, Position position)
+        : base (game, color, position) {}
 
         public override bool[,] GetPositionsToMove()
         {
@@ -27,7 +28,7 @@ namespace ChessGame.Piece.Entity
                     continue;
 
                 Piece? pieceTarget = Game.Board.GetPieceByPosition(kingPos);
-                if (pieceTarget == null || pieceTarget.IsWhite != this.IsWhite)
+                if (pieceTarget == null || pieceTarget.Color != this.Color)
                 {
                     steps[kingPos.Column,kingPos.Line] = true;
                 }
@@ -41,14 +42,14 @@ namespace ChessGame.Piece.Entity
         {
             return new King(
                 Game = this.Game,
-                IsWhite = this.IsWhite,
+                Color = this.Color,
                 Position = new Position(this.Position.Column,this.Position.Line)
             );
         }
 
         public override string ToString()
         {
-            if (this.IsWhite) return "K";
+            if (this.Color == PlayerColor.White) return "K";
 
             return "k";
         }
