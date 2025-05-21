@@ -25,29 +25,30 @@ namespace ChessGame.Piece.Entity
             if (Game.Board.IsValidPosition(pos) && enemyPiece == null)
             {
                 steps[pos.Column,pos.Line] = true;
-            }
-
-            if (Movements == 0)
-            {
-                pos = TwoStepsAhead(Position);
-                enemyPiece = Game.Board.GetPieceByPosition(pos);
-                if (Game.Board.IsValidPosition(pos) && enemyPiece == null)
+                
+                // two ahead (En Passant)
+                if (Movements == 0)
                 {
-                    steps[pos.Column,pos.Line] = true;
+                    pos = TwoStepsAhead(Position);
+                    enemyPiece = Game.Board.GetPieceByPosition(pos);
+                    if (Game.Board.IsValidPosition(pos) && enemyPiece == null)
+                    {
+                        steps[pos.Column, pos.Line] = true;
+                    }
                 }
             }
 
             // Positions to catch enemy piece to right
             pos = RigthDiagonalSteps(Position);
             enemyPiece = Game.Board.GetPieceByPosition(pos);
-            if (Game.Board.IsValidPosition(pos) && enemyPiece != null && enemyPiece.Color != PlayerColor.White)
+            if (Game.Board.IsValidPosition(pos) && enemyPiece != null && enemyPiece.Color != this.Color)
             {
                 steps[pos.Column,pos.Line] = true;
             }
             // Position to catch enemy piece to left
             pos = LeftDiagonalSteps(Position);
             enemyPiece = Game.Board.GetPieceByPosition(pos);
-            if (Game.Board.IsValidPosition(pos) && enemyPiece != null! && enemyPiece.Color != PlayerColor.White)
+            if (Game.Board.IsValidPosition(pos) && enemyPiece != null! && enemyPiece.Color != this.Color)
             {
                 steps[pos.Column,pos.Line] = true;
             }

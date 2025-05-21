@@ -5,81 +5,73 @@ namespace ChessGame.Logic.Service
 
     public class GameUtils
     {
-        public bool[,] GetPathBetween(Position refPiece, Position enemyPiece) // king first!!
+        public bool[,] GetPathBetween(Position positionA, Position positionB) // king first!!
         {
             bool[,] path = new bool[8, 8];
-            if (!refPiece.IsInBoard() || !enemyPiece.IsInBoard()) throw new OutOfTableException("Position fail!. The ref piece or enemy piece are out of board!.");
+
+            if (!positionA.IsInBoard() || !positionB.IsInBoard())
+                throw new OutOfTableException("Position fail!. The ref piece or enemy piece are out of board!.");
 
             // straight path
-            if (refPiece.Column == enemyPiece.Column)
+            if (positionA.Column == positionB.Column)
             {
-                int min = Math.Min(refPiece.Line, enemyPiece.Line);
-                int max = Math.Max(refPiece.Line, enemyPiece.Line);
+                int min = Math.Min(positionA.Line, positionB.Line);
+                int max = Math.Max(positionA.Line, positionB.Line);
 
                 for (int l = min; l <= max; l++)
                 {
-                    if (refPiece.Compare(new Position(refPiece.Column, l)))
-                    {
-                        continue; // if coordinates are of king (refPiece)
-                    }
-
-                    path[refPiece.Column, l] = true;
+                    path[positionA.Column, l] = true;
                 }
 
                 return path;
             }
-            if (refPiece.Line == enemyPiece.Line)
+            else if (positionA.Line == positionB.Line)
             {
-                int min = Math.Min(refPiece.Line, enemyPiece.Line);
-                int max = Math.Max(refPiece.Line, enemyPiece.Line);
+                int min = Math.Min(positionA.Column, positionB.Column);
+                int max = Math.Max(positionA.Column, positionB.Column);
 
                 for (int c = min; c <= max; c++)
                 {
-                    if (refPiece.Compare(new Position(c, refPiece.Line)))
-                    {
-                        continue; // if coordinates are of king (refPiece)
-                    }
-
-                    path[c, refPiece.Line] = true;
+                    path[c, positionA.Line] = true;
                 }
 
                 return path;
             }
 
             // diagonal path
-            // get piece above
-            Position pAbove = new Position(refPiece.Line < enemyPiece.Line ? refPiece.Column : enemyPiece.Column,
-                                           refPiece.Line < enemyPiece.Line ? refPiece.Line : enemyPiece.Line);
-            // get piece below
-            Position pBelow = new Position(refPiece.Line > enemyPiece.Line ? refPiece.Column : enemyPiece.Column,
-                                           refPiece.Line > enemyPiece.Line ? refPiece.Line : enemyPiece.Line);
+            if (!IsDiagonal(positionA, positionB))
+                return path;
 
-            while (true)
+            // positionA
+            int x1 = positionA.Column;
+            int y1 = positionA.Line;
+            // positionB
+            int x2 = positionB.Column;
+            int y2 = positionB.Line;
+
+            // directions
+            int dirx = x1 > x2 ? -1 : 1;
+            int diry = y1 > y2 ? -1 : 1;
+
+            // vars will be the pointer
+            int x = x1 += dirx;
+            int y = y1 += diry;
+
+            while (x != x2 && y != y2)
             {
-                if (!pAbove.IsInBoard())
-                {
-                    path = new bool[8, 8];
-                    break;
-                }
-                if (!refPiece.Compare(pAbove)) path[pAbove.Column, pAbove.Line] = true;
+                if (x >= 0 && x < 8 && y >= 0 && y < 8)
+                    path[x, y] = true;
 
-                if (pBelow.Compare(pAbove)) break;
-
-                // diagonal to right
-                if (pAbove.Column < pBelow.Column)
-                {
-                    pAbove.Column++;
-                    pAbove.Line++;
-                }
-                else // diagonal to left
-                {
-                    pAbove.Column--;
-                    pAbove.Line++;
-                }
+                x += dirx;
+                y += diry;
             }
 
             return path;
         }
 
+        private bool IsDiagonal(Position origin, Position destination)
+        {
+            return Math.Abs(origin.Column - destination.Column) == Math.Abs(origin.Line - destination.Line);
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace ChessGame.Piece.Entity
                         continue;
                     }
 
-                    if (enemyPiece.Color != PlayerColor.White)
+                    if (enemyPiece.Color != this.Color)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -52,7 +52,7 @@ namespace ChessGame.Piece.Entity
                         continue;
                     }
 
-                    if (enemyPiece.Color != PlayerColor.White)
+                    if (enemyPiece.Color != this.Color)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -75,7 +75,7 @@ namespace ChessGame.Piece.Entity
                         continue;
                     }
 
-                    if (enemyPiece.Color != PlayerColor.White)
+                    if (enemyPiece.Color != this.Color)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }
@@ -98,7 +98,7 @@ namespace ChessGame.Piece.Entity
                         continue;
                     }
 
-                    if (enemyPiece.Color != PlayerColor.White)
+                    if (enemyPiece.Color != this.Color)
                     {
                         steps[pos.Column, pos.Line] = true;
                     }

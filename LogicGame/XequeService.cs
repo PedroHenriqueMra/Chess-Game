@@ -6,11 +6,15 @@ namespace ChessGame.Logic.Service
     using ChessGame.Piece.PieceModel;
     using ChessGame.Table;
     using ChessGame.Exceptions;
+    using System.Data.Common;
 
     public class XequeService
     {
+        public GameUtils Utils { get; set; }
+
         private Game Game { get; set; }
         private Board Board { get; set; }
+
         public XequeService(Game game, Board board)
         {
             this.Game = game;
@@ -30,7 +34,7 @@ namespace ChessGame.Logic.Service
                 return false;
 
             // Get pieces break xeque mate
-            List<Piece> pieces = PiecesBreaksXeque(king);
+            List<Piece> pieces = GetDefensivePieces(king);
             if (pieces.Count == 0)
                 return true;
 
@@ -42,7 +46,7 @@ namespace ChessGame.Logic.Service
             int[] colPositions = { 0, 1, 1, 1, 0, -1, -1, -1 };
             int[] linPositions = { -1, -1, 0, 1, 1, 1, 0, -1 };
 
-            bool[,] kingMoves = Game.GetkingMovements(king);
+            bool[,] kingMoves = Game.GetkingSafeMoves(king);
 
             for (int lop = 0; lop < 8; lop++)
             {
@@ -61,7 +65,7 @@ namespace ChessGame.Logic.Service
             return false;
         }
 
-        public List<Piece> PiecesBreaksXeque(King king)
+        public List<Piece> GetDefensivePieces(King king)
         {
             List<Piece> pieceList = new List<Piece>();
 
@@ -80,7 +84,7 @@ namespace ChessGame.Logic.Service
                     {
                         if (KingCanRun(king))
                             pieceList.Add(king);
-                            
+
                         continue;
                     }
 
@@ -95,7 +99,7 @@ namespace ChessGame.Logic.Service
 
                     if (enemyPiece is not Knight)
                     {
-                        bool[,] pathBetween = Game.Utils.GetPathBetween(king.Position, enemyPiece.Position);
+                        bool[,] pathBetween = Utils.GetPathBetween(king.Position, enemyPiece.Position);
                         for (int c = 0; c < 8; c++)
                         {
                             for (int l = 0; l < 8; l++)
@@ -114,16 +118,39 @@ namespace ChessGame.Logic.Service
             return pieceList;
         }
 
-        //public bool[,] PositionsToBreakXeque()
-        //{
-        //    
-        //}
+        public bool[,]? GetBreakXequePosition(King king, Piece ally, Piece enemy)
+        {
+            if (!IsInXeque(king) || king.Color != ally.Color) return null;
+
+            bool[,] defencySteps = new bool[8, 8];
+
+            bool[,] pathBetween = Utils.GetPathBetween(king.Position, enemy.Position);
+            bool[,] allySteps = ally.GetPositionsToMove();
+
+            for (int c = 0; c < 8; c++)
+            {
+                for (int l = 0; l < 8; l++)
+                {
+                    if (allySteps[c, l] && pathBetween[c, l])
+                    {
+                        defencySteps[c, l] = true;
+                        break;
+                    }
+                }
+            }
+
+            Position enemyPos = enemy.Position;
+            if (allySteps[enemyPos.Column, enemyPos.Line])
+                defencySteps[enemyPos.Column, enemyPos.Line] = true;
+
+            return defencySteps;
+        }
 
         public bool IsInXeque(King king)
         {
-            foreach (var dict in Game.AllPieceMovements)
+            foreach (var dict in Game.AllPieceMovements.Where(p => p.Key.Color != king.Color))
             {
-                if (dict.Key.Color != king.Color && dict.Value[king.Position.Column, king.Position.Line])
+                if (dict.Value[king.Position.Column, king.Position.Line])
                 {
                     return true;
                 }
@@ -167,19 +194,13 @@ namespace ChessGame.Logic.Service
             if (!fakePos.IsInBoard())
                 return true;
 
-            Dictionary<Piece, bool[,]> dictBackUp = Game.AllPieceMovements;
             King fakeKing = new King(Game, realKing.Color, fakePos);
-
             using (Board.FakeBoardEnviroument())
             {
                 Board.RemovePiece(realKing);
-                Board.PutPiece(fakeKing, fakeKing.Position);
+                Board.PutPiece(fakeKing, fakePos);
 
-                Game.SetAllPieceMoves();
-                bool isInXeque = IsInXeque(fakeKing);
-                Game.AllPieceMovements = dictBackUp;
-
-                if (isInXeque)
+                if (IsInXeque(fakeKing))
                     return true;
             }
 

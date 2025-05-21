@@ -20,7 +20,7 @@ namespace ChessGame.Piece.PieceModel
 
         public void IncreaseMoviment()
         {
-            this.Movements++; 
+            this.Movements++;
         }
 
         public void ChangePosition(Position newPos)

@@ -8,6 +8,7 @@ namespace ChessGame.Table.Draw
     using System.ComponentModel;
     using ChessGame.Logic.Player.PlayerEntity;
     using ChessGame.Logic.Player.Color;
+    using ChessGame.Piece.Entity;
 
     public class DrawGame
     {
@@ -26,6 +27,12 @@ namespace ChessGame.Table.Draw
         public void DrawOptions(bool[,] options)
         {
             ClearScreen();
+
+            // test:
+            Console.WriteLine($"Turn: {Game.Turns}");
+            Console.WriteLine($"Is in xeque?: {Game.IsInXeque}");
+            Console.WriteLine($"Pawn En passant: {Game.PawnEnPassant?.Position.ToString()}");
+            Console.WriteLine($"Turn En passant: {Game.TurnEnPassant}\n");
 
             for (int l = 0; l < 8; l++)
             {
@@ -66,6 +73,12 @@ namespace ChessGame.Table.Draw
         {
             ClearScreen();
 
+            // test:
+            Console.WriteLine($"Turn: {Game.Turns}");
+            Console.WriteLine($"Is in xeque?: {Game.IsInXeque}");
+            Console.WriteLine($"Pawn En passant: {Game.PawnEnPassant:.Position.ToString()}");
+            Console.WriteLine($"Turn En passant: {Game.TurnEnPassant}\n");
+
             for (int l = 0; l < 8; l++)
             {
                 for (int c = 0; c < 8; c++)
@@ -74,13 +87,7 @@ namespace ChessGame.Table.Draw
                         Console.Write($" {LineNumbers[l]}");
 
                     // Set color
-                    ConsoleColor consoleColor = Console.BackgroundColor;
-                    if (pieceSelected.Position.Compare(c, l))
-                        consoleColor = ConsoleColor.Gray;
-
-                    if (steps[c, l])
-                        consoleColor = Board.Pieces[c, l] == null ? ConsoleColor.Yellow : ConsoleColor.Red;
-
+                    ConsoleColor consoleColor = SetColor(pieceSelected, steps, c, l);
                     Console.BackgroundColor = consoleColor;
 
                     // Draw board
@@ -107,10 +114,41 @@ namespace ChessGame.Table.Draw
             Console.WriteLine("\n");
         }
 
+        private ConsoleColor SetColor(Piece pieceSelected, bool[,] steps, int c, int l)
+        {
+            ConsoleColor consoleColor = Console.BackgroundColor;
 
+            if (pieceSelected.Position.Compare(c, l))
+                consoleColor = ConsoleColor.Gray;
+
+            if (steps[c, l])
+            {
+                consoleColor = Board.Pieces[c, l] == null ? ConsoleColor.Yellow : ConsoleColor.Red;
+
+                // color in En Passant play
+                if (pieceSelected is Pawn && Board.Pieces[c, l] == null && Game.PawnEnPassant != null)
+                {
+                    // direction to find out the pawn En Passant position.
+                    int pawnDirection = pieceSelected.Color == PlayerColor.White
+                        ? +1 : -1;
+                    Pawn pawnEnPassant = Game.PawnEnPassant;
+
+                    if (Game.IsInPassant(pawnEnPassant))
+                        consoleColor = ConsoleColor.Red;
+
+                    return consoleColor;
+                }
+            }
+
+            return consoleColor;
+        }
 
         public void DrawMessage(string message)
         {
+            Console.WriteLine("");
+            Console.BackgroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(message);
+            Console.ResetColor();
         }
 
         public void DrawInfo(Player player)
@@ -123,10 +161,10 @@ namespace ChessGame.Table.Draw
             Console.WriteLine("-------------------------------");
         }
 
-        public void DrawGameResult(bool whiteIsWinner)
+        public void DrawGameResult(PlayerColor color)
         {
-            string winnerMessage = whiteIsWinner ? "Parabens!!. Você ganhou." : "Você perdeu!.";
-            ConsoleColor backgroundColor = whiteIsWinner ? ConsoleColor.DarkGreen : ConsoleColor.Red;
+            string winnerMessage = color == PlayerColor.White ? "congratulations!!. You win!." : "You lost";
+            ConsoleColor backgroundColor = color == PlayerColor.White ? ConsoleColor.DarkGreen : ConsoleColor.Red;
 
             Console.BackgroundColor = backgroundColor;
             Console.WriteLine(winnerMessage);

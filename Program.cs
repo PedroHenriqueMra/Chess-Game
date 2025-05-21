@@ -16,13 +16,19 @@ DrawGame drawGame = new DrawGame(game, game.Board);
 Input userInputService = new Input();
 
 // dependências
-game.XequeService = new XequeService(game, game.Board);
-game.Utils = new GameUtils();
+GameUtils utils = new GameUtils();
+XequeService xequeService = new XequeService(game, game.Board);
+xequeService.Utils = utils;
+
+// injecting dependencies in game class 
+game.Utils = utils;
+game.XequeService = xequeService;
 
 
 game.PutPiecesOnBoard();
 void JogarTurno()
 {
+    // get possible movements
     bool[,] playerPlays = new bool[8, 8];
     foreach (var p in game.GetPieceOptions(game.CurrentPlayer))
         playerPlays[p.Position.Column, p.Position.Line] = true;
@@ -34,29 +40,55 @@ void JogarTurno()
     {
         try
         {
+            Piece piece;
+            bool[,] pieceSteps;
+
             // Get piece on the board
             int column = userInputService.GetColumnCoordinate();
             int line = userInputService.GetLineCoordinate();
+
             if (!playerPlays[column, line])
                 throw new InvalidPieceException($"{column} - {line} is out of your choice!.");
 
-            Piece piece = game.Board.GetPieceByPosition(new Position(column, line));
+            piece = game.Board.GetPieceByPosition(new Position(column, line));
 
-            bool[,] pieceSteps = game.AllPieceMovements.First(p => p.Key.Position.Compare(piece.Position)).Value;
+            pieceSteps = game.AllPieceMovements.First(p => p.Key.Position.Compare(piece.Position)).Value;
             drawGame.DrawBoard(piece, pieceSteps);
 
             // Get target coordinates
-            int columnTarget = userInputService.GetColumnCoordinate();
-            int lineTarget = userInputService.GetLineCoordinate();
-            if (!pieceSteps[columnTarget, lineTarget])
-                throw new ImpossibleToMoveException($"{columnTarget} - {lineTarget} is not an option!.");
+            while (true)
+            {
+                int columnTarget = userInputService.GetColumnCoordinate("Select the column index (A-H). Or type 'X' to cancel and go back");
+                if (columnTarget == -1)
+                {
+                    drawGame.DrawOptions(playerPlays);
+                    drawGame.DrawInfo(game.CurrentPlayer);
+                    break;
+                }
 
-            game.MovePiece(piece, new Position(columnTarget, lineTarget));
-            break;
+                int lineTarget = userInputService.GetLineCoordinate("Select the line index (1-8). Or type 'X' to cancel and go back");
+                if (lineTarget == -1)
+                {
+                    drawGame.DrawOptions(playerPlays);
+                    drawGame.DrawInfo(game.CurrentPlayer);
+                    break;
+                }
+
+                if (!pieceSteps[columnTarget, lineTarget])
+                    continue;
+
+                game.MovePiece(piece, new Position(columnTarget, lineTarget));
+                return; // exit from loop
+            }
+        }
+        catch (InvalidPieceException ex)
+        {
+            drawGame.DrawMessage(ex.Message);
         }
         catch (Exception ex)
         {
-            drawGame.DrawMessage(ex.Message);
+            Console.WriteLine(ex.Message);
+            Console.WriteLine("An unexpected error has occurred.");
         }
     }
 }
@@ -65,7 +97,7 @@ bool VerifyEndGame()
 {
     if (!game.IsInXeque) return false;
 
-    King? king = game.GetKing(game.GetEnemyPlayer());
+    King? king = game.GetKing(game.CurrentPlayer);
     if (king == null || game.XequeService.IsInXequeMate(king))
     {
         game.GameIsOver(game.GetEnemyPlayer());
@@ -96,7 +128,7 @@ void GameLoop()
         }
     }
 
-    drawGame.DrawMessage("Fim de jogo!");
+    drawGame.DrawGameResult(game.Winner.Color);
 }
 
 
