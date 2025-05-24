@@ -16,7 +16,7 @@ namespace ChessGame.Piece.Entity
         // minus line = get up on the board
         public override bool[,] GetPositionsToMove()
         {                 
-            bool[,] steps = new bool[Game.Board.Lenght[0], Game.Board.Lenght[1]];
+            bool[,] steps = new bool[Game.Board.NumColumn, Game.Board.NumLine];
             Position pos = new Position(0,0);
 
             // Positions to move piece
@@ -82,7 +82,7 @@ namespace ChessGame.Piece.Entity
         public Position TwoStepsAhead(Position pos)
         {
             Position newPosition = new Position(0,0);
-                return Color == PlayerColor.White
+            return Color == PlayerColor.White
                 ? newPosition.ChangePosition(pos.Column, pos.Line -= 2)
                 : newPosition.ChangePosition(pos.Column, pos.Line += 2);
         }
@@ -90,7 +90,7 @@ namespace ChessGame.Piece.Entity
         public Position RigthDiagonalSteps(Position pos)
         {
             Position newPosition = new Position(0,0);
-                return Color == PlayerColor.White
+            return Color == PlayerColor.White
                 ? newPosition.ChangePosition(pos.Column += 1, pos.Line -= 1)
                 : newPosition.ChangePosition(pos.Column -= 1, pos.Line += 1);
         }
@@ -98,7 +98,7 @@ namespace ChessGame.Piece.Entity
         public Position LeftDiagonalSteps(Position pos)
         {
             Position newPosition = new Position(0,0);
-                return Color == PlayerColor.White
+            return Color == PlayerColor.White
                 ? newPosition.ChangePosition(pos.Column -= 1, pos.Line -= 1)
                 : newPosition.ChangePosition(pos.Column += 1, pos.Line += 1);
         }
@@ -144,11 +144,14 @@ namespace ChessGame.Piece.Entity
 
         public override Piece Clone()
         {
-            return new Pawn(
+            Pawn clone = new Pawn(
                 Game = this.Game,
                 Color = this.Color,
-                Position = new Position(this.Position.Column,this.Position.Line)
+                Position = new Position(this.Position.Column, this.Position.Line)
             );
+            clone.Movements = this.Movements;
+            
+            return clone;
         }
 
         public override string ToString()

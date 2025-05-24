@@ -12,7 +12,7 @@ namespace ChessGame.Piece.Entity
 
         public override bool[,] GetPositionsToMove()
         {
-            bool[,] steps = new bool[Game.Board.Lenght[0], Game.Board.Lenght[1]];
+            bool[,] steps = new bool[Game.Board.NumColumn, Game.Board.NumLine];
 
             // geting rook and bishop steps, because they are the same as the Queen
             bool[,] rookMoves = new Rook(Game, Color, Position).GetPositionsToMove();
@@ -31,11 +31,14 @@ namespace ChessGame.Piece.Entity
 
         public override Piece Clone()
         {
-            return new Queen(
+            Queen clone = new Queen(
                 Game = this.Game,
                 Color = this.Color,
-                Position = new Position(this.Position.Column,this.Position.Line)
+                Position = new Position(this.Position.Column, this.Position.Line)
             );
+            clone.Movements = this.Movements;
+            
+            return clone;
         }
 
         public override string ToString()

@@ -16,6 +16,8 @@ namespace ChessGame.Piece.PieceModel
             Position = position;
             Color = color;
             Game = game;
+
+            Movements = 0;
         }
 
         public void IncreaseMoviment()

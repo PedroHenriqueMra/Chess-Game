@@ -1,138 +1,64 @@
 using System.Security.Cryptography.X509Certificates;
-using ChessGame.Exceptions;
 
 namespace ChessGame.Table.Input
 {
     public class Input
     {
-        private readonly char[] LineIndex = { '8', '7', '6', '5', '4', '3', '2', '1' };
-        private readonly char[] ColumnIndex = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
+        private readonly List<char> lineIndex = new List<char> { '8', '7', '6', '5', '4', '3', '2', '1' };
+        private readonly List<char> columnIndex = new List<char> { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
 
-        public int GetColumnCoordinate(string message) // with message
+        public int GetColumnIndexInput(string? message = null)
         {
             while (true)
             {
                 try
                 {
-                    Console.WriteLine(message);
-                    char input = char.ToUpper(char.Parse(Console.ReadLine()));
-
-                    int index = ColumnIndex.ToList().IndexOf(input);
+                    Console.WriteLine(message != null ? message : "COLUMN (A-H): ");
+                    char input = char.Parse(Console.ReadLine());
+                    input = char.IsLower(input) ? char.ToUpper(input) : input;
 
                     if (input == 'X')
-                    {
-                        if (CancelChoise())
-                            return -1;
+                        return -1;
 
-                        continue;
-                    }
-
+                    int index = columnIndex.IndexOf(input);
                     if (index != -1)
                         return index;
-
-                    throw new IndexNotExistsException($"The index '{input}' is invalid!");
                 }
-                catch (IndexNotExistsException ex)
+                catch (Exception)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("Type a valid index!. (One character, without spaces)");
                 }
             }
         }
 
-        public int GetColumnCoordinate() // withou message
+        public int GetLineIndexInput(string? message = null)
         {
             while (true)
             {
                 try
                 {
-                    Console.WriteLine("Select the column index (A-H).");
-                    char input = char.ToUpper(char.Parse(Console.ReadLine()));
+                    Console.WriteLine(message != null ? message : "LINE (1-8): ");
+                    char input = char.Parse(Console.ReadLine());
 
-                    int index = ColumnIndex.ToList().IndexOf(input);
-
-                    if (input == 'X')
+                    if (char.IsLetter(input))
                     {
-                        if (CancelChoise())
+                        input = char.IsLower(input) ? char.ToUpper(input) : input;
+                        if (input == 'X')
                             return -1;
-
-                        continue;
                     }
 
+                    int index = lineIndex.IndexOf(input);
                     if (index != -1)
                         return index;
-
-                    throw new IndexNotExistsException($"The index '{input}' is invalid!");
                 }
-                catch (IndexNotExistsException ex)
+                catch (Exception)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("Type a valid index!. (One character, without spaces)");
                 }
             }
         }
 
-        public int GetLineCoordinate(string message) // with message
-        {
-            while (true)
-            {
-                try
-                {
-                    Console.WriteLine(message);
-                    char input = char.ToUpper(char.Parse(Console.ReadLine()));
-
-                    int index = LineIndex.ToList().IndexOf(input);
-
-                    if (input == 'X')
-                    {
-                        if (CancelChoise())
-                            return -1;
-
-                        continue;
-                    }
-
-                    if (index != -1)
-                        return index;
-
-                    throw new IndexNotExistsException($"The index '{input}' is invalid!");
-                }
-                catch (IndexNotExistsException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-        }
-
-        public int GetLineCoordinate() // withou message
-        {
-            while (true)
-            {
-                try
-                {
-                    Console.WriteLine("Select the line index (1-8).");
-                    char input = char.ToUpper(char.Parse(Console.ReadLine()));
-
-                    int index = LineIndex.ToList().IndexOf(input);
-
-                    if (input == 'X')
-                    {
-                        if (CancelChoise())
-                            return -1;
-
-                        continue;
-                    }
-
-                    if (index != -1)
-                        return index;
-
-                    throw new IndexNotExistsException($"The index '{input}' is invalid!");
-                }
-                catch (IndexNotExistsException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-        }
-
-        public bool CancelChoise()
+        public bool CancelChoiseInput()
         {
             while (true)
             {
@@ -147,6 +73,26 @@ namespace ChessGame.Table.Input
                     return false;
                 }
                 catch (Exception ex)
+                {
+                    Console.WriteLine("Type a valid answer (one character)!");
+                }
+            }
+        }
+
+        public char PromotionInput(char[] charList)
+        {
+            while (true)
+            {
+                try
+                {
+                    Console.WriteLine("Do your choose: ");
+                    char answer = char.ToUpper(char.Parse(Console.ReadLine()));
+
+                    answer = char.ToLower(answer);
+                    if (charList.Contains(answer))
+                        return answer;
+                }
+                catch (Exception)
                 {
                     Console.WriteLine("Type a valid answer (one character)!");
                 }

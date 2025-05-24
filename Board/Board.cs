@@ -6,17 +6,19 @@ namespace ChessGame.Table
     public class Board
     {
         public Piece[,] Pieces { get; set; }
-        public int[] Lenght { get; set; } // [0] == line [1] == column
+        public int NumColumn { get; set; }
+        public int NumLine { get; set; }
         public Board(int numCol,int numLine)
         {
+            NumColumn = numCol;
+            NumLine = numLine;
             Pieces = new Piece[numCol, numLine];
-            Lenght = [numCol,numLine];
         }
 
         public Piece? GetPieceByPosition(Position position)
         {
-            if (position.Column < 0 || position.Column >= Lenght[1]) return null;
-            if (position.Line < 0 || position.Line >= Lenght[1]) return null;
+            if (position.Column < 0 || position.Column >= NumColumn) return null;
+            if (position.Line < 0 || position.Line >= NumLine) return null;
 
             return Pieces[position.Column,position.Line];
         }
@@ -37,6 +39,7 @@ namespace ChessGame.Table
                 this.Pieces[target.Column, target.Line] = piece;
             }
         }
+        
         public void RemovePiece(Piece piece)
         {
             this.Pieces[piece.Position.Column, piece.Position.Line] = null;
@@ -53,11 +56,6 @@ namespace ChessGame.Table
             {
                 return false;
             } 
-        }
-
-        public FakeBoard FakeBoardEnviroument()
-        {
-            return new FakeBoard(this);
         }
     }
 }

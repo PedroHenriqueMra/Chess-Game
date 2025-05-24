@@ -1,6 +1,5 @@
 namespace ChessGame.Logic.Service
 {
-    using ChessGame.Exceptions;
     using ChessGame.Logic.PositionGame;
 
     public class GameUtils
@@ -10,33 +9,33 @@ namespace ChessGame.Logic.Service
             bool[,] path = new bool[8, 8];
 
             if (!positionA.IsInBoard() || !positionB.IsInBoard())
-                throw new OutOfTableException("Position fail!. The ref piece or enemy piece are out of board!.");
+                return null;
 
             // straight path
-            if (positionA.Column == positionB.Column)
-            {
-                int min = Math.Min(positionA.Line, positionB.Line);
-                int max = Math.Max(positionA.Line, positionB.Line);
-
-                for (int l = min; l <= max; l++)
+                if (positionA.Column == positionB.Column)
                 {
-                    path[positionA.Column, l] = true;
+                    int min = Math.Min(positionA.Line, positionB.Line);
+                    int max = Math.Max(positionA.Line, positionB.Line);
+
+                    for (int l = min; l <= max; l++)
+                    {
+                        path[positionA.Column, l] = true;
+                    }
+
+                    return path;
                 }
-
-                return path;
-            }
-            else if (positionA.Line == positionB.Line)
-            {
-                int min = Math.Min(positionA.Column, positionB.Column);
-                int max = Math.Max(positionA.Column, positionB.Column);
-
-                for (int c = min; c <= max; c++)
+                else if (positionA.Line == positionB.Line)
                 {
-                    path[c, positionA.Line] = true;
-                }
+                    int min = Math.Min(positionA.Column, positionB.Column);
+                    int max = Math.Max(positionA.Column, positionB.Column);
 
-                return path;
-            }
+                    for (int c = min; c <= max; c++)
+                    {
+                        path[c, positionA.Line] = true;
+                    }
+
+                    return path;
+                }
 
             // diagonal path
             if (!IsDiagonal(positionA, positionB))

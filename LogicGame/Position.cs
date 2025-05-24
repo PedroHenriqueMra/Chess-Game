@@ -1,6 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using ChessGame.Exceptions;
-
 namespace ChessGame.Logic.PositionGame;
 
 public struct Position

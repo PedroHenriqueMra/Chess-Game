@@ -5,8 +5,6 @@ namespace ChessGame.Logic.Service
     using ChessGame.Piece.Entity;
     using ChessGame.Piece.PieceModel;
     using ChessGame.Table;
-    using ChessGame.Exceptions;
-    using System.Data.Common;
 
     public class XequeService
     {
@@ -23,11 +21,12 @@ namespace ChessGame.Logic.Service
 
         public bool IsInXequeMate(King king)
         {
-            int howManyXeques = HowManyXeques(king);
-            if (howManyXeques > 1) // there is too xeques
-                return true;
-            if (howManyXeques == 0) // there is not xeques
+            int countXeques = HowManyXeques(king);
+            if (countXeques == 0) // there is not xeques
                 return false;
+
+            if (countXeques > 1) // there is too xeques
+                return true;
 
             // Verify if king can run
             if (KingCanRun(king))
@@ -140,8 +139,7 @@ namespace ChessGame.Logic.Service
             }
 
             Position enemyPos = enemy.Position;
-            if (allySteps[enemyPos.Column, enemyPos.Line])
-                defencySteps[enemyPos.Column, enemyPos.Line] = true;
+            defencySteps[enemyPos.Column, enemyPos.Line] = allySteps[enemyPos.Column, enemyPos.Line];
 
             return defencySteps;
         }
@@ -194,17 +192,23 @@ namespace ChessGame.Logic.Service
             if (!fakePos.IsInBoard())
                 return true;
 
-            King fakeKing = new King(Game, realKing.Color, fakePos);
-            using (Board.FakeBoardEnviroument())
+            using (Game.FakeGameEnviroument())
             {
                 Board.RemovePiece(realKing);
+
+                // Remove enemy piece to get next capture of the pawn
+                Piece? enemyPiece = Board.GetPieceByPosition(fakePos);
+                if (enemyPiece != null && enemyPiece.Color != realKing.Color)
+                    Board.RemovePiece(enemyPiece);
+
+                King fakeKing = new King(Game, realKing.Color, fakePos);
                 Board.PutPiece(fakeKing, fakePos);
 
-                if (IsInXeque(fakeKing))
-                    return true;
-            }
+                // Atualize all pieces
+                Game.RegisterPieceMoves();
 
-            return false;
+                return IsInXeque(fakeKing);
+            }
         }
     }
 }

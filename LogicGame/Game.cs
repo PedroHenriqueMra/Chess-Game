@@ -7,9 +7,6 @@ namespace ChessGame.Logic.Game
     using ChessGame.Logic.Player.PlayerEntity;
     using ChessGame.Logic.Player.Color;
     using ChessGame.Logic.Service;
-    using ChessGame.Exceptions;
-    using System.Reflection.Metadata;
-    using System.Data.Common;
 
     public class Game
     {
@@ -20,7 +17,7 @@ namespace ChessGame.Logic.Game
         public int Turns { get; set; }
         public bool GameOver { get; private set; } = default;
         public Player[] Players { get; set; } = new Player[2];
-        public Player Winner { get; private set; }
+        public Player? Winner { get; private set; }
         public Player CurrentPlayer { get; private set; }
         public Board Board { get; set; }
         public Pawn? PawnEnPassant { get; private set; }
@@ -30,7 +27,7 @@ namespace ChessGame.Logic.Game
 
         public Game()
         {
-            Board = new Board(8,8);
+            Board = new Board(8, 8);
             Turns = 0;
 
             Player playerWhite = new Player(PlayerColor.White);
@@ -46,7 +43,24 @@ namespace ChessGame.Logic.Game
             AllPieceMovements = new Dictionary<Piece, bool[,]>();
         }
 
-        public void GameIsOver(Player winner)
+        public bool CheckDraw()
+        {
+            foreach (var dict in this.AllPieceMovements.Values)
+            {
+                for (int c = 0; c < 8; c++)
+                {
+                    for (int l = 0; l < 8; l++)
+                    {
+                        if (dict[c, l])
+                            return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        public void GameIsOver(Player? winner)
         {
             this.GameOver = true;
             this.Winner = winner;
@@ -58,7 +72,7 @@ namespace ChessGame.Logic.Game
 
             this.ChangeCurrentPlayer();
 
-            // clear en passant
+            // Reset en passant
             if (TurnEnPassant != null && Turns != TurnEnPassant)
             {
                 ClearEnPassant();
@@ -69,11 +83,11 @@ namespace ChessGame.Logic.Game
         {
             if (Turns % 2 == 0)
             {
-                CurrentPlayer = Players.First(p => p.Color == PlayerColor.White);
+                CurrentPlayer = GetPlayerByColor(PlayerColor.White);
                 return;
             }
 
-            CurrentPlayer = Players.First(p => p.Color == PlayerColor.Black);
+            CurrentPlayer = GetPlayerByColor(PlayerColor.Black);
         }
 
         public Player GetEnemyPlayer()
@@ -81,12 +95,12 @@ namespace ChessGame.Logic.Game
             return this.Players.First(p => p.Color != CurrentPlayer.Color);
         }
 
-        public Player getPlayerByColor(PlayerColor color)
+        public Player GetPlayerByColor(PlayerColor color)
         {
             return Players.First(p => p.Color == color);
         }
 
-        public void SetAllPieceMoves()
+        public void RegisterPieceMoves()
         {
             // cleaning
             AllPieceMovements = new Dictionary<Piece, bool[,]>();
@@ -105,11 +119,19 @@ namespace ChessGame.Logic.Game
                     }
                 }
             }
+        }
+
+        public void RegisterPieceMovesWithXeque()
+        {
+            RegisterPieceMoves();
 
             // calcule king steps and piece defencers steps (including the positions in xeque)
             var pieces = AllPieceMovements.Keys.ToList();
             foreach (var piece in pieces)
-                AllPieceMovements[piece] = GetPieceMoves(piece);
+            {
+                bool[,] steps = GetPieceMoves(piece);
+                this.AllPieceMovements[piece] = steps;
+            }
         }
 
         private bool[,] GetPieceMoves(Piece piece)
@@ -119,8 +141,8 @@ namespace ChessGame.Logic.Game
             if (piece is King)
                 return moves;
 
-            Player piecePlayer = getPlayerByColor(piece.Color);
-            King king = GetKing(piecePlayer);
+            Player piecePlayer = GetPlayerByColor(piece.Color);
+            King? king = GetKing(piecePlayer);
 
             if (XequeService.IsInXeque(king))
             {
@@ -151,7 +173,7 @@ namespace ChessGame.Logic.Game
                     Pawn pieceAsPawn = piece as Pawn;
                     if (target.Compare(pieceAsPawn.TwoStepsAhead(pieceAsPawn.Position)))
                     {
-                        EnPassantMoviment(pieceAsPawn);
+                        SetEnPassant(pieceAsPawn);
                     }
                 }
 
@@ -162,7 +184,7 @@ namespace ChessGame.Logic.Game
                 return 0;
             }
 
-            throw new ImpossibleToMoveException($"Isn't possible to move {piece.ToString()} to {target.ToString()}");
+            return 0;
         }
 
         private bool IsPossibleToCatch(Piece piece, Position target, out Piece? captured)
@@ -172,27 +194,23 @@ namespace ChessGame.Logic.Game
             // catch with en passant
             if (piece is Pawn)
             {
-                Pawn pieceAsPawn = piece as Pawn;
+                Pawn pawn = piece as Pawn;
                 // logic to capture en passant
-                if (pieceAsPawn.RigthDiagonalSteps(piece.Position).Compare(target) && pieceAsPawn.CheckToRight(piece.Position))
+                if (pawn.RigthDiagonalSteps(piece.Position).Compare(target) && pawn.CheckToRight(piece.Position))
                 {
                     // check if there's an enemmy pawn to right
-                    Position pos = new Position(piece.Position.Column, piece.Position.Line);
-                    pos = piece.Color == PlayerColor.White
-                            ? pos.ChangePosition(pos.Column += 1, pos.Line)
-                            : pos.ChangePosition(pos.Column -= 1, pos.Line);
+                    int colDirection = piece.Color == PlayerColor.White ? 1 : -1;
+                    Position pos = new Position(piece.Position.Column + colDirection, piece.Position.Line);
 
                     captured = Board.GetPieceByPosition(pos);
                     return true;
                 }
 
-                if (pieceAsPawn.LeftDiagonalSteps(piece.Position).Compare(target) && pieceAsPawn.CheckToLeft(piece.Position))
+                if (pawn.LeftDiagonalSteps(piece.Position).Compare(target) && pawn.CheckToLeft(piece.Position))
                 {
                     // check if there's an enemmy pawn to left
-                    Position pos = new Position(piece.Position.Column, piece.Position.Line);
-                    pos = piece.Color == PlayerColor.White
-                            ? pos.ChangePosition(pos.Column -= 1, pos.Line)
-                            : pos.ChangePosition(pos.Column += 1, pos.Line);
+                    int colDirection = piece.Color == PlayerColor.White ? -1 : 1;
+                    Position pos = new Position(piece.Position.Column + colDirection, piece.Position.Line);
 
                     captured = Board.GetPieceByPosition(pos);
                     return true;
@@ -217,11 +235,11 @@ namespace ChessGame.Logic.Game
             CurrentPlayer.PiecesYouCatch.Append(captured);
             CurrentPlayer.AmountPiecesYouCatch++;
 
-            Player enemy = Players.First(p => p.Color != CurrentPlayer.Color);
+            Player enemy = GetEnemyPlayer();
             enemy.AmountPieces--;
         }
 
-        public bool IsInPassant(Piece piece)
+        public bool IsInPassant(Pawn piece)
         {
             if (PawnEnPassant != null && PawnEnPassant.Position.Compare(piece.Position))
             {
@@ -231,11 +249,12 @@ namespace ChessGame.Logic.Game
             return false;
         }
 
-        private void EnPassantMoviment(Pawn pawn)
+        private void SetEnPassant(Pawn pawn)
         {
             this.PawnEnPassant = pawn;
             this.TurnEnPassant = Turns;
-            this.TurnEnPassant++; // "TurnEnPassant++" cause the En Passant is valid for the next turn and not the current one
+            // "TurnEnPassant++" cause the En Passant is valid for the next turn and not the current one
+            this.TurnEnPassant++;
         }
 
         private void ClearEnPassant()
@@ -248,7 +267,7 @@ namespace ChessGame.Logic.Game
         {
             King? king = GetKing(CurrentPlayer);
             if (king == null)
-                throw new KingWasCatchedException();
+                return;
 
             this.IsInXeque = XequeService.IsInXeque(king);
         }
@@ -256,7 +275,8 @@ namespace ChessGame.Logic.Game
         public King? GetKing(Player player)
         {
             foreach (var dict in AllPieceMovements.Where(d => d.Key.Color == player.Color))
-                if (dict.Key is King) return dict.Key as King;
+                if (dict.Key is King)
+                    return dict.Key as King;
 
             return null;
         }
@@ -264,10 +284,10 @@ namespace ChessGame.Logic.Game
         public List<Piece> GetPieceOptions(Player player)
         {
             var dictPieces = AllPieceMovements.Where(p => p.Key.Color == player.Color);
-            King? king = dictPieces.First(p => p.Key is King).Key as King;
+            King? king = GetKing(player);
 
             if (king == null)
-                throw new KingWasCatchedException("The King was Catched! Game finished.");
+                return null;
 
             if (XequeService.IsInXeque(king))
             {
@@ -279,7 +299,7 @@ namespace ChessGame.Logic.Game
             {
                 Piece piece = dict.Key;
                 bool[,] movements = dict.Value;
-                
+
                 if (piece.HasMove(movements))
                 {
                     pieceOptions.Add(piece);
@@ -317,20 +337,87 @@ namespace ChessGame.Logic.Game
             return steps;
         }
 
+        public Piece? Promotion(Piece pawn, char chosenPiece)
+        {
+            if (pawn.Color == PlayerColor.White && pawn.Position.Line > 0) return null;
+            if (pawn.Color == PlayerColor.Black && pawn.Position.Line < 7) return null;
+
+            chosenPiece = char.ToLower(chosenPiece);
+
+            Dictionary<char, Piece> dictPieces = new Dictionary<char, Piece>();
+            dictPieces.Add('q', new Queen(this, pawn.Color, pawn.Position));
+            dictPieces.Add('r', new Rook(this, pawn.Color, pawn.Position));
+            dictPieces.Add('h', new Knight(this, pawn.Color, pawn.Position));
+            dictPieces.Add('b', new Bishop(this, pawn.Color, pawn.Position));
+
+            dictPieces.TryGetValue(chosenPiece, out Piece? piece);
+            if (piece != null)
+                piece.Movements = pawn.Movements;
+
+            return piece;
+        }
+
+        public void RealizePromotion(Piece pawn, Piece promotionPiece)
+        {
+            Board.RemovePiece(pawn);
+            Board.PutPiece(promotionPiece, pawn.Position);
+        }
+
+        public FakeGame FakeGameEnviroument()
+        {
+            return new FakeGame(this);
+        }
+
         public void PutPiecesOnBoard()
         {
             //white pieces:
-            Board.Pieces[0, 1] = new Rook(this, PlayerColor.White, new Position(0, 1));
-            Board.Pieces[1, 7] = new Knight(this, PlayerColor.White, new Position(1, 7));
-            Board.Pieces[1, 2] = new Bishop(this, PlayerColor.White, new Position(1, 2));
-            Board.Pieces[3, 7] = new King(this, PlayerColor.White, new Position(3, 7));
-            Board.Pieces[3, 6] = new Queen(this, PlayerColor.White, new Position(3, 6));
-            Board.Pieces[5, 2] = new Bishop(this, PlayerColor.White, new Position(5, 2));
-            Board.Pieces[6, 7] = new Knight(this, PlayerColor.White, new Position(6, 7));
-            Board.Pieces[7, 7] = new Rook(this, PlayerColor.White, new Position(7, 7));
+            //Board.Pieces[0, 7] = new Rook(this, PlayerColor.White, new Position(0, 7));
+            //Board.Pieces[1, 7] = new Knight(this, PlayerColor.White, new Position(1, 7));
+            //Board.Pieces[2, 7] = new Bishop(this, PlayerColor.White, new Position(2, 7));
+            //Board.Pieces[3, 7] = new King(this, PlayerColor.White, new Position(3, 7));
+            //Board.Pieces[4, 7] = new Queen(this, PlayerColor.White, new Position(4, 7));
+            //Board.Pieces[5, 7] = new Bishop(this, PlayerColor.White, new Position(5, 7));
+            //Board.Pieces[6, 7] = new Knight(this, PlayerColor.White, new Position(6, 7));
+            //Board.Pieces[7, 7] = new Rook(this, PlayerColor.White, new Position(7, 7));
             //Board.Pieces[0, 6] = new Pawn(this, PlayerColor.White, new Position(0, 6));
             //Board.Pieces[1, 6] = new Pawn(this, PlayerColor.White, new Position(1, 6));
             //Board.Pieces[2, 6] = new Pawn(this, PlayerColor.White, new Position(2, 6));
+            //Board.Pieces[3, 6] = new Pawn(this, PlayerColor.White, new Position(3, 6));
+            //Board.Pieces[4, 6] = new Pawn(this, PlayerColor.White, new Position(4, 6));
+            //Board.Pieces[5, 6] = new Pawn(this, PlayerColor.White, new Position(5, 6));
+            //Board.Pieces[6, 6] = new Pawn(this, PlayerColor.White, new Position(6, 6));
+            //Board.Pieces[7, 6] = new Pawn(this, PlayerColor.White, new Position(7, 6));
+            //black pieces:
+            //Board.Pieces[0, 0] = new Rook(this, PlayerColor.Black, new Position(0, 0));
+            //Board.Pieces[1, 0] = new Knight(this, PlayerColor.Black, new Position(1, 0));
+            //Board.Pieces[2, 0] = new Bishop(this, PlayerColor.Black, new Position(2, 0));
+            //Board.Pieces[3, 0] = new King(this, PlayerColor.Black, new Position(3, 0));
+            //Board.Pieces[4, 0] = new Queen(this, PlayerColor.Black, new Position(4, 0));
+            //Board.Pieces[5, 0] = new Bishop(this, PlayerColor.Black, new Position(5, 0));
+            //Board.Pieces[6, 0] = new Knight(this, PlayerColor.Black, new Position(6, 0));
+            //Board.Pieces[7, 0] = new Rook(this, PlayerColor.Black, new Position(7, 0));
+            //Board.Pieces[0, 1] = new Pawn(this, PlayerColor.Black, new Position(0, 1));
+            //Board.Pieces[1, 1] = new Pawn(this, PlayerColor.Black, new Position(1, 1));
+            //Board.Pieces[2, 1] = new Pawn(this, PlayerColor.Black, new Position(2, 1));
+            //Board.Pieces[3, 1] = new Pawn(this, PlayerColor.Black, new Position(3, 1));
+            //Board.Pieces[4, 1] = new Pawn(this, PlayerColor.Black, new Position(4, 1));
+            //Board.Pieces[5, 1] = new Pawn(this, PlayerColor.Black, new Position(5, 1));
+            //Board.Pieces[6, 1] = new Pawn(this, PlayerColor.Black, new Position(6, 1));
+            //Board.Pieces[7, 1] = new Pawn(this, PlayerColor.Black, new Position(7, 1));
+
+            // TESTS
+            //white pieces:
+            //Board.Pieces[0, 1] = new Rook(this, PlayerColor.White, new Position(0, 1));
+            //Board.Pieces[1, 7] = new Knight(this, PlayerColor.White, new Position(1, 7));
+            //Board.Pieces[1, 2] = new Bishop(this, PlayerColor.White, new Position(1, 2));
+            Board.Pieces[3, 7] = new King(this, PlayerColor.White, new Position(3, 7));
+            Board.Pieces[3, 6] = new Queen(this, PlayerColor.White, new Position(3, 6));
+            //Board.Pieces[5, 2] = new Bishop(this, PlayerColor.White, new Position(5, 2));
+            Board.Pieces[6, 7] = new Knight(this, PlayerColor.White, new Position(6, 7));
+            //Board.Pieces[7, 7] = new Rook(this, PlayerColor.White, new Position(7, 7));
+            //Board.Pieces[6, 2] = new Pawn(this, PlayerColor.White, new Position(6, 2));
+            //Board.Pieces[5, 2] = new Pawn(this, PlayerColor.White, new Position(5, 2));
+            //Board.Pieces[4, 2] = new Pawn(this, PlayerColor.White, new Position(4, 2));
             //Board.Pieces[3, 6] = new Pawn(this, PlayerColor.White, new Position(3, 6));
             //Board.Pieces[4, 6] = new Pawn(this, PlayerColor.White, new Position(4, 6));
             //Board.Pieces[5, 6] = new Pawn(this, PlayerColor.White, new Position(5, 6));
@@ -345,8 +432,8 @@ namespace ChessGame.Logic.Game
             //Board.Pieces[5, 0] = new Bishop(this, PlayerColor.Black, new Position(5, 0));
             //Board.Pieces[6, 0] = new Knight(this, PlayerColor.Black, new Position(6, 0));
             //Board.Pieces[7, 0] = new Rook(this, PlayerColor.Black, new Position(7, 0));
-            //Board.Pieces[0, 1] = new Pawn(this, PlayerColor.Black, new Position(0, 1));
-            //Board.Pieces[1, 1] = new Pawn(this, PlayerColor.Black, new Position(1, 1));
+            Board.Pieces[0, 1] = new Pawn(this, PlayerColor.Black, new Position(0, 1));
+            Board.Pieces[1, 1] = new Pawn(this, PlayerColor.Black, new Position(1, 1));
             //Board.Pieces[2, 1] = new Pawn(this, PlayerColor.Black, new Position(2, 1));
             //Board.Pieces[3, 1] = new Pawn(this, PlayerColor.Black, new Position(3, 1));
             //Board.Pieces[4, 1] = new Pawn(this, PlayerColor.Black, new Position(4, 1));

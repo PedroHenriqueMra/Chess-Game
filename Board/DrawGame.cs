@@ -1,22 +1,24 @@
 namespace ChessGame.Table.Draw
 {
-    using System.ComponentModel.Design.Serialization;
     using ChessGame.Logic.Game;
-    using ChessGame.Logic.PositionGame;
     using ChessGame.Table;
     using ChessGame.Piece.PieceModel;
-    using System.ComponentModel;
     using ChessGame.Logic.Player.PlayerEntity;
     using ChessGame.Logic.Player.Color;
     using ChessGame.Piece.Entity;
+    using System.Text;
 
     public class DrawGame
     {
         public Game Game { get; set; }
         public Board Board { get; set; }
 
-        private readonly char[] LineNumbers = { '8', '7', '6', '5', '4', '3', '2', '1' };
-        private readonly char[] ColumnLirycs = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
+        private ConsoleColor whitePieceColor = ConsoleColor.White;
+        private ConsoleColor blackPieceColor = ConsoleColor.Yellow;
+        private ConsoleColor indexColor = ConsoleColor.DarkYellow;
+
+        private readonly char[] lineLabels = { '8', '7', '6', '5', '4', '3', '2', '1' };
+        private readonly char[] columnLabels = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
 
         public DrawGame(Game game, Board board)
         {
@@ -26,156 +28,150 @@ namespace ChessGame.Table.Draw
 
         public void DrawOptions(bool[,] options)
         {
-            ClearScreen();
-
-            // test:
-            Console.WriteLine($"Turn: {Game.Turns}");
-            Console.WriteLine($"Is in xeque?: {Game.IsInXeque}");
-            Console.WriteLine($"Pawn En passant: {Game.PawnEnPassant?.Position.ToString()}");
-            Console.WriteLine($"Turn En passant: {Game.TurnEnPassant}\n");
-
-            for (int l = 0; l < 8; l++)
-            {
-                for (int c = 0; c < 8; c++)
-                {
-                    if (c == 0)
-                        Console.Write($" {LineNumbers[l]}");
-
-                    // Set color
-                    if (options[c, l]) Console.BackgroundColor = ConsoleColor.Gray;
-
-                    // Draw board
-                    if (Board.Pieces[c, l] != null)
-                    {
-                        Console.Write($" {Board.Pieces[c, l]} ");
-                    }
-                    else
-                        Console.Write(" - ");
-
-                    Console.ResetColor();
-                }
-
-                Console.WriteLine("");
-            }
-
-            for (int cl = 0; cl < ColumnLirycs.Length; cl++)
-            {
-                if (cl == 0)
-                    Console.Write(" X");
-
-                Console.Write($" {ColumnLirycs[cl]} ");
-            }
-
-            Console.WriteLine("\n");
+            DrawBoardInternal(options);
         }
 
-        public void DrawBoard(Piece pieceSelected, bool[,] steps)
+        public void DrawBoard(Piece selectedPiece, bool[,] steps)
+        {
+            DrawBoardInternal(steps, selectedPiece);
+        }
+
+        private void DrawBoardInternal(bool[,] steps, Piece? selectedPiece = null)
         {
             ClearScreen();
 
-            // test:
-            Console.WriteLine($"Turn: {Game.Turns}");
-            Console.WriteLine($"Is in xeque?: {Game.IsInXeque}");
-            Console.WriteLine($"Pawn En passant: {Game.PawnEnPassant:.Position.ToString()}");
-            Console.WriteLine($"Turn En passant: {Game.TurnEnPassant}\n");
-
             for (int l = 0; l < 8; l++)
             {
+                Console.ForegroundColor = indexColor;
+                Console.Write($" {lineLabels[l]}");
+                Console.ResetColor();
+
                 for (int c = 0; c < 8; c++)
                 {
-                    if (c == 0)
-                        Console.Write($" {LineNumbers[l]}");
+                    Console.BackgroundColor = GetColor(selectedPiece, steps, c, l);
 
-                    // Set color
-                    ConsoleColor consoleColor = SetColor(pieceSelected, steps, c, l);
-                    Console.BackgroundColor = consoleColor;
-
-                    // Draw board
-                    if (Board.Pieces[c, l] != null)
+                    Piece? piece = Board.Pieces[c, l];
+                    if (piece != null)
                     {
-                        Console.Write($" {Board.Pieces[c, l]} ");
+                        Console.ForegroundColor = GetPieceColor(piece);
+                        Console.Write($" {piece.ToString()} ");
                     }
                     else
+                    {
                         Console.Write(" - ");
+                    }
 
                     Console.ResetColor();
                 }
 
-                Console.WriteLine("");
+                Console.WriteLine();
             }
 
-            for (int cl = 0; cl < ColumnLirycs.Length; cl++)
-            {
-                if (cl == 0)
-                    Console.Write(" X");
-
-                Console.Write($" {ColumnLirycs[cl]} ");
-            }
-            Console.WriteLine("\n");
+            DrawColumnLabels();
+            Console.WriteLine();
         }
 
-        private ConsoleColor SetColor(Piece pieceSelected, bool[,] steps, int c, int l)
+        private void DrawColumnLabels()
+        {
+            Console.ForegroundColor = indexColor;
+            Console.Write(" X");
+            foreach (var label in columnLabels)
+                Console.Write($" {label} ");
+
+            Console.ResetColor();
+            Console.WriteLine();
+        }
+
+        private ConsoleColor GetColor(Piece? selectedPiece, bool[,] steps, int c, int l)
         {
             ConsoleColor consoleColor = Console.BackgroundColor;
 
-            if (pieceSelected.Position.Compare(c, l))
+            if (selectedPiece == null && steps[c, l])
+            {
+                return ConsoleColor.Gray;
+            }
+
+            if (selectedPiece != null && selectedPiece.Position.Compare(c, l))
+            {
                 consoleColor = ConsoleColor.Gray;
+            }
 
             if (steps[c, l])
             {
                 consoleColor = Board.Pieces[c, l] == null ? ConsoleColor.Yellow : ConsoleColor.Red;
-
-                // color in En Passant play
-                if (pieceSelected is Pawn && Board.Pieces[c, l] == null && Game.PawnEnPassant != null)
-                {
-                    // direction to find out the pawn En Passant position.
-                    int pawnDirection = pieceSelected.Color == PlayerColor.White
-                        ? +1 : -1;
-                    Pawn pawnEnPassant = Game.PawnEnPassant;
-
-                    if (Game.IsInPassant(pawnEnPassant))
-                        consoleColor = ConsoleColor.Red;
-
-                    return consoleColor;
-                }
             }
 
             return consoleColor;
         }
 
+        private ConsoleColor GetPieceColor(Piece? piece)
+        {
+            return piece?.Color == PlayerColor.White ? whitePieceColor : blackPieceColor;
+        }
+
         public void DrawMessage(string message)
         {
-            Console.WriteLine("");
-            Console.BackgroundColor = ConsoleColor.Yellow;
+            string border = GenBorder('~', message.Length);
+            Console.WriteLine(border);
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(message);
             Console.ResetColor();
+            Console.WriteLine(border);
         }
 
         public void DrawInfo(Player player)
         {
-            Console.WriteLine("-------------------------------");
-            Console.WriteLine($"Vez de /{player}/");
+            string border = GenBorder('-', 30);
+            Console.WriteLine(border);
+            Console.WriteLine($"{player.ToString().ToUpper()}'s turn");
             Console.WriteLine("Informations:");
             Console.WriteLine($"Number of pieces: {player.AmountPieces}");
-            Console.WriteLine($"Number of pieces catched: {player.AmountPiecesYouCatch}");
-            Console.WriteLine("-------------------------------");
+            Console.WriteLine($"Captured pieces: {player.AmountPiecesYouCatch}");
+            Console.WriteLine(border);
         }
 
         public void DrawGameResult(PlayerColor color)
         {
-            string winnerMessage = color == PlayerColor.White ? "congratulations!!. You win!." : "You lost";
-            ConsoleColor backgroundColor = color == PlayerColor.White ? ConsoleColor.DarkGreen : ConsoleColor.Red;
+            string message = color == PlayerColor.White
+                ? "Congratulations! You win!"
+                : "Unfortunately, you lost.";
 
-            Console.BackgroundColor = backgroundColor;
-            Console.WriteLine(winnerMessage);
+            ConsoleColor bg = color == PlayerColor.White
+                ? ConsoleColor.DarkGreen
+                : ConsoleColor.Red;
+
+            string border = GenBorder('#', 30);
+            Console.WriteLine(border);
+
+            Console.BackgroundColor = bg;
+            Console.WriteLine(message);
             Console.ResetColor();
+
+            Console.WriteLine(border);
+        }
+
+        public void DrawPromotionOptions()
+        {
+            string border = GenBorder('-', 30);
+            Console.WriteLine(border);
+            Console.WriteLine("PROMOTION TIME!");
+            Console.WriteLine("Choose one of these pieces to replace your pawn:");
+            Console.WriteLine("'q' - Queen");
+            Console.WriteLine("'b' - Bishop");
+            Console.WriteLine("'r' - Rook");
+            Console.WriteLine("'h' - Knight");
+            Console.WriteLine(border);
         }
 
         public void ClearScreen()
         {
             Console.Clear();
-            Console.WriteLine("");
+            Console.WriteLine();
+        }
+
+        private string GenBorder(char c, int length)
+        {
+            return new string(c, length);
         }
     }
-
 }
