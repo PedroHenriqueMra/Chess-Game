@@ -1,11 +1,11 @@
-using System.Security.Cryptography.X509Certificates;
-
 namespace ChessGame.Table.Input
 {
+    using ChessGame.Exceptions;
+
     public class Input
     {
-        private readonly List<char> lineIndex = new List<char> { '8', '7', '6', '5', '4', '3', '2', '1' };
-        private readonly List<char> columnIndex = new List<char> { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
+        private readonly List<char> linelabel = new List<char> { '8', '7', '6', '5', '4', '3', '2', '1' };
+        private readonly List<char> columnlabel = new List<char> { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
 
         public int GetColumnIndexInput(string? message = null)
         {
@@ -18,15 +18,22 @@ namespace ChessGame.Table.Input
                     input = char.IsLower(input) ? char.ToUpper(input) : input;
 
                     if (input == 'X')
-                        return -1;
+                    {
+                        if (CancelChoiseInput())
+                        {
+                            return -1;
+                        }
+                    }
 
-                    int index = columnIndex.IndexOf(input);
-                    if (index != -1)
-                        return index;
+                    int index = columnlabel.IndexOf(input);
+                    if (index == -1)
+                        throw new InvalidLabelException($"{input} is not a valid column!.");
+
+                    return index; 
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Type a valid index!. (One character, without spaces)");
+                    Console.WriteLine("Type a valid index!. Between (A-H).");
                 }
             }
         }
@@ -44,16 +51,23 @@ namespace ChessGame.Table.Input
                     {
                         input = char.IsLower(input) ? char.ToUpper(input) : input;
                         if (input == 'X')
-                            return -1;
+                        {
+                            if (CancelChoiseInput())
+                            {
+                                return -1;
+                            }
+                        }
                     }
 
-                    int index = lineIndex.IndexOf(input);
-                    if (index != -1)
-                        return index;
+                    int index = linelabel.IndexOf(input);
+                    if (index == -1)
+                        throw new InvalidLabelException($"{input} is not a valid line!.");
+
+                    return index;
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Type a valid index!. (One character, without spaces)");
+                    Console.WriteLine("Type a valid index!. Between (1-8).");
                 }
             }
         }
@@ -72,7 +86,7 @@ namespace ChessGame.Table.Input
 
                     return false;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Console.WriteLine("Type a valid answer (one character)!");
                 }

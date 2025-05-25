@@ -7,6 +7,7 @@ namespace ChessGame.Table.Draw
     using ChessGame.Logic.Player.Color;
     using ChessGame.Piece.Entity;
     using System.Text;
+    using System;
 
     public class DrawGame
     {
@@ -75,6 +76,7 @@ namespace ChessGame.Table.Draw
         {
             Console.ForegroundColor = indexColor;
             Console.Write(" X");
+            
             foreach (var label in columnLabels)
                 Console.Write($" {label} ");
 
@@ -130,24 +132,28 @@ namespace ChessGame.Table.Draw
             Console.WriteLine(border);
         }
 
-        public void DrawGameResult(PlayerColor color)
+        public void DrawEndGame(PlayerColor winner, string errorMessage = null)
         {
-            string message = color == PlayerColor.White
+            string message = winner == PlayerColor.White
                 ? "Congratulations! You win!"
                 : "Unfortunately, you lost.";
 
-            ConsoleColor bg = color == PlayerColor.White
+            ConsoleColor bg = winner == PlayerColor.White
                 ? ConsoleColor.DarkGreen
                 : ConsoleColor.Red;
 
-            string border = GenBorder('#', 30);
-            Console.WriteLine(border);
+            DrawBoardInternal(new bool[8, 8], null);
+            if (errorMessage != null)
+                DrawMessage(errorMessage);
 
+            string border = GenBorder('-', message.Length);
             Console.BackgroundColor = bg;
-            Console.WriteLine(message);
-            Console.ResetColor();
 
             Console.WriteLine(border);
+            Console.WriteLine(message);
+            Console.WriteLine(border);
+
+            Console.ResetColor();
         }
 
         public void DrawPromotionOptions()
@@ -172,6 +178,11 @@ namespace ChessGame.Table.Draw
         private string GenBorder(char c, int length)
         {
             return new string(c, length);
+        }
+
+        internal void DrawInfo(string message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

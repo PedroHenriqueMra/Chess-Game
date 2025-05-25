@@ -7,6 +7,7 @@ namespace ChessGame.Logic.Game
     using ChessGame.Logic.Player.PlayerEntity;
     using ChessGame.Logic.Player.Color;
     using ChessGame.Logic.Service;
+    using ChessGame.Exceptions;
 
     public class Game
     {
@@ -119,6 +120,9 @@ namespace ChessGame.Logic.Game
                     }
                 }
             }
+
+            if (AllPieceMovements.Count(p => p.Key is King) != 2)
+                throw new KingIsOutOfBoardException("The king is not in game!.");
         }
 
         public void RegisterPieceMovesWithXeque()
@@ -153,6 +157,12 @@ namespace ChessGame.Logic.Game
                 {
                     return XequeService.GetBreakXequePosition(king, piece, whoCasesXeque);
                 }
+            }
+
+            // Verify if king will be in xeque if the piece leaves
+            if (XequeService.KingWillBeInXeque(piece))
+            {
+                return new bool[8, 8];
             }
 
             return moves;
@@ -371,51 +381,51 @@ namespace ChessGame.Logic.Game
         public void PutPiecesOnBoard()
         {
             //white pieces:
-            //Board.Pieces[0, 7] = new Rook(this, PlayerColor.White, new Position(0, 7));
-            //Board.Pieces[1, 7] = new Knight(this, PlayerColor.White, new Position(1, 7));
-            //Board.Pieces[2, 7] = new Bishop(this, PlayerColor.White, new Position(2, 7));
-            //Board.Pieces[3, 7] = new King(this, PlayerColor.White, new Position(3, 7));
-            //Board.Pieces[4, 7] = new Queen(this, PlayerColor.White, new Position(4, 7));
-            //Board.Pieces[5, 7] = new Bishop(this, PlayerColor.White, new Position(5, 7));
-            //Board.Pieces[6, 7] = new Knight(this, PlayerColor.White, new Position(6, 7));
-            //Board.Pieces[7, 7] = new Rook(this, PlayerColor.White, new Position(7, 7));
-            //Board.Pieces[0, 6] = new Pawn(this, PlayerColor.White, new Position(0, 6));
-            //Board.Pieces[1, 6] = new Pawn(this, PlayerColor.White, new Position(1, 6));
-            //Board.Pieces[2, 6] = new Pawn(this, PlayerColor.White, new Position(2, 6));
-            //Board.Pieces[3, 6] = new Pawn(this, PlayerColor.White, new Position(3, 6));
-            //Board.Pieces[4, 6] = new Pawn(this, PlayerColor.White, new Position(4, 6));
-            //Board.Pieces[5, 6] = new Pawn(this, PlayerColor.White, new Position(5, 6));
-            //Board.Pieces[6, 6] = new Pawn(this, PlayerColor.White, new Position(6, 6));
-            //Board.Pieces[7, 6] = new Pawn(this, PlayerColor.White, new Position(7, 6));
+            Board.Pieces[0, 7] = new Rook(this, PlayerColor.White, new Position(0, 7));
+            Board.Pieces[1, 7] = new Knight(this, PlayerColor.White, new Position(1, 7));
+            Board.Pieces[2, 7] = new Bishop(this, PlayerColor.White, new Position(2, 7));
+            Board.Pieces[3, 7] = new King(this, PlayerColor.White, new Position(3, 7));
+            Board.Pieces[4, 7] = new Queen(this, PlayerColor.White, new Position(4, 7));
+            Board.Pieces[5, 7] = new Bishop(this, PlayerColor.White, new Position(5, 7));
+            Board.Pieces[6, 7] = new Knight(this, PlayerColor.White, new Position(6, 7));
+            Board.Pieces[7, 7] = new Rook(this, PlayerColor.White, new Position(7, 7));
+            Board.Pieces[0, 6] = new Pawn(this, PlayerColor.White, new Position(0, 6));
+            Board.Pieces[1, 6] = new Pawn(this, PlayerColor.White, new Position(1, 6));
+            Board.Pieces[2, 6] = new Pawn(this, PlayerColor.White, new Position(2, 6));
+            Board.Pieces[3, 6] = new Pawn(this, PlayerColor.White, new Position(3, 6));
+            Board.Pieces[4, 6] = new Pawn(this, PlayerColor.White, new Position(4, 6));
+            Board.Pieces[5, 6] = new Pawn(this, PlayerColor.White, new Position(5, 6));
+            Board.Pieces[6, 6] = new Pawn(this, PlayerColor.White, new Position(6, 6));
+            Board.Pieces[7, 6] = new Pawn(this, PlayerColor.White, new Position(7, 6));
             //black pieces:
-            //Board.Pieces[0, 0] = new Rook(this, PlayerColor.Black, new Position(0, 0));
-            //Board.Pieces[1, 0] = new Knight(this, PlayerColor.Black, new Position(1, 0));
-            //Board.Pieces[2, 0] = new Bishop(this, PlayerColor.Black, new Position(2, 0));
-            //Board.Pieces[3, 0] = new King(this, PlayerColor.Black, new Position(3, 0));
-            //Board.Pieces[4, 0] = new Queen(this, PlayerColor.Black, new Position(4, 0));
-            //Board.Pieces[5, 0] = new Bishop(this, PlayerColor.Black, new Position(5, 0));
-            //Board.Pieces[6, 0] = new Knight(this, PlayerColor.Black, new Position(6, 0));
-            //Board.Pieces[7, 0] = new Rook(this, PlayerColor.Black, new Position(7, 0));
-            //Board.Pieces[0, 1] = new Pawn(this, PlayerColor.Black, new Position(0, 1));
-            //Board.Pieces[1, 1] = new Pawn(this, PlayerColor.Black, new Position(1, 1));
-            //Board.Pieces[2, 1] = new Pawn(this, PlayerColor.Black, new Position(2, 1));
-            //Board.Pieces[3, 1] = new Pawn(this, PlayerColor.Black, new Position(3, 1));
-            //Board.Pieces[4, 1] = new Pawn(this, PlayerColor.Black, new Position(4, 1));
-            //Board.Pieces[5, 1] = new Pawn(this, PlayerColor.Black, new Position(5, 1));
-            //Board.Pieces[6, 1] = new Pawn(this, PlayerColor.Black, new Position(6, 1));
-            //Board.Pieces[7, 1] = new Pawn(this, PlayerColor.Black, new Position(7, 1));
+            Board.Pieces[0, 0] = new Rook(this, PlayerColor.Black, new Position(0, 0));
+            Board.Pieces[1, 0] = new Knight(this, PlayerColor.Black, new Position(1, 0));
+            Board.Pieces[2, 0] = new Bishop(this, PlayerColor.Black, new Position(2, 0));
+            Board.Pieces[3, 0] = new King(this, PlayerColor.Black, new Position(3, 0));
+            Board.Pieces[4, 0] = new Queen(this, PlayerColor.Black, new Position(4, 0));
+            Board.Pieces[5, 0] = new Bishop(this, PlayerColor.Black, new Position(5, 0));
+            Board.Pieces[6, 0] = new Knight(this, PlayerColor.Black, new Position(6, 0));
+            Board.Pieces[7, 0] = new Rook(this, PlayerColor.Black, new Position(7, 0));
+            Board.Pieces[0, 1] = new Pawn(this, PlayerColor.Black, new Position(0, 1));
+            Board.Pieces[1, 1] = new Pawn(this, PlayerColor.Black, new Position(1, 1));
+            Board.Pieces[2, 1] = new Pawn(this, PlayerColor.Black, new Position(2, 1));
+            Board.Pieces[3, 1] = new Pawn(this, PlayerColor.Black, new Position(3, 1));
+            Board.Pieces[4, 1] = new Pawn(this, PlayerColor.Black, new Position(4, 1));
+            Board.Pieces[5, 1] = new Pawn(this, PlayerColor.Black, new Position(5, 1));
+            Board.Pieces[6, 1] = new Pawn(this, PlayerColor.Black, new Position(6, 1));
+            Board.Pieces[7, 1] = new Pawn(this, PlayerColor.Black, new Position(7, 1));
 
             // TESTS
             //white pieces:
             //Board.Pieces[0, 1] = new Rook(this, PlayerColor.White, new Position(0, 1));
             //Board.Pieces[1, 7] = new Knight(this, PlayerColor.White, new Position(1, 7));
-            //Board.Pieces[1, 2] = new Bishop(this, PlayerColor.White, new Position(1, 2));
-            Board.Pieces[3, 7] = new King(this, PlayerColor.White, new Position(3, 7));
-            Board.Pieces[3, 6] = new Queen(this, PlayerColor.White, new Position(3, 6));
+            //Board.Pieces[3, 6] = new Bishop(this, PlayerColor.White, new Position(3, 6));
+            //Board.Pieces[3, 7] = new King(this, PlayerColor.White, new Position(3, 7));
+            //Board.Pieces[3, 6] = new Queen(this, PlayerColor.White, new Position(3, 6));
             //Board.Pieces[5, 2] = new Bishop(this, PlayerColor.White, new Position(5, 2));
-            Board.Pieces[6, 7] = new Knight(this, PlayerColor.White, new Position(6, 7));
+            //Board.Pieces[6, 7] = new Knight(this, PlayerColor.White, new Position(6, 7));
             //Board.Pieces[7, 7] = new Rook(this, PlayerColor.White, new Position(7, 7));
-            //Board.Pieces[6, 2] = new Pawn(this, PlayerColor.White, new Position(6, 2));
+            //Board.Pieces[6, 6] = new Pawn(this, PlayerColor.White, new Position(6, 6));
             //Board.Pieces[5, 2] = new Pawn(this, PlayerColor.White, new Position(5, 2));
             //Board.Pieces[4, 2] = new Pawn(this, PlayerColor.White, new Position(4, 2));
             //Board.Pieces[3, 6] = new Pawn(this, PlayerColor.White, new Position(3, 6));
@@ -427,13 +437,13 @@ namespace ChessGame.Logic.Game
             //Board.Pieces[0, 0] = new Rook(this, PlayerColor.Black, new Position(0, 0));
             //Board.Pieces[1, 0] = new Knight(this, PlayerColor.Black, new Position(1, 0));
             //Board.Pieces[2, 0] = new Bishop(this, PlayerColor.Black, new Position(2, 0));
-            Board.Pieces[3, 0] = new King(this, PlayerColor.Black, new Position(3, 0));
-            //Board.Pieces[4, 0] = new Queen(this, PlayerColor.Black, new Position(4, 0));
+            //Board.Pieces[2, 0] = new King(this, PlayerColor.Black, new Position(2, 0));
+            //Board.Pieces[3, 0] = new Queen(this, PlayerColor.Black, new Position(3, 0));
             //Board.Pieces[5, 0] = new Bishop(this, PlayerColor.Black, new Position(5, 0));
             //Board.Pieces[6, 0] = new Knight(this, PlayerColor.Black, new Position(6, 0));
             //Board.Pieces[7, 0] = new Rook(this, PlayerColor.Black, new Position(7, 0));
-            Board.Pieces[0, 1] = new Pawn(this, PlayerColor.Black, new Position(0, 1));
-            Board.Pieces[1, 1] = new Pawn(this, PlayerColor.Black, new Position(1, 1));
+            //Board.Pieces[0, 1] = new Pawn(this, PlayerColor.Black, new Position(0, 1));
+            //Board.Pieces[1, 1] = new Pawn(this, PlayerColor.Black, new Position(1, 1));
             //Board.Pieces[2, 1] = new Pawn(this, PlayerColor.Black, new Position(2, 1));
             //Board.Pieces[3, 1] = new Pawn(this, PlayerColor.Black, new Position(3, 1));
             //Board.Pieces[4, 1] = new Pawn(this, PlayerColor.Black, new Position(4, 1));

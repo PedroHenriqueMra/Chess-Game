@@ -1,5 +1,6 @@
 namespace ChessGame.Logic.Service
 {
+    using System.Reflection.Metadata;
     using ChessGame.Logic.Game;
     using ChessGame.Logic.PositionGame;
     using ChessGame.Piece.Entity;
@@ -208,6 +209,19 @@ namespace ChessGame.Logic.Service
                 Game.RegisterPieceMoves();
 
                 return IsInXeque(fakeKing);
+            }
+        }
+
+        public bool KingWillBeInXeque(Piece piece)
+        {
+            using (Game.FakeGameEnviroument())
+            {
+                Board.RemovePiece(piece);
+
+                Game.RegisterPieceMoves();
+
+                King king = Game.GetKing(Game.CurrentPlayer);
+                return IsInXeque(king);
             }
         }
     }
