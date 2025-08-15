@@ -1,0 +1,2 @@
+/home/pedro-henrique/Documents/console_programs_c#/Chess game/bin/Release/net8.0/linux-x64/publish/Chess game.pdb
+/home/pedro-henrique/Documents/console_programs_c#/Chess game/bin/Release/net8.0/linux-x64/publish/Chess game

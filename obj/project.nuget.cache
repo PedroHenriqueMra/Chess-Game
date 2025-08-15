@@ -1,13 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "+W00bKLByWU=",
+  "dgSpecHash": "cjySEgSd5qSXbmFsG8njUWVsLRW7XfLsuk2AUUGEYsop2MZTxXn73iOndn51aoMQcxEUAwDAJdI1GgmWtCJSIA==",
   "success": true,
-  "projectFilePath": "/home/pedro-henrique/Documents/logica-c#/Chess game/Chess game.csproj",
+  "projectFilePath": "/home/pedro-henrique/Documents/console_programs_c#/Chess game/Chess game.csproj",
   "expectedPackageFiles": [
+    "/home/pedro-henrique/.nuget/packages/microsoft.net.illink.tasks/8.0.18/microsoft.net.illink.tasks.8.0.18.nupkg.sha512",
     "/home/pedro-henrique/.nuget/packages/wacton.unicolour/4.7.0/wacton.unicolour.4.7.0.nupkg.sha512",
-    "/home/pedro-henrique/.nuget/packages/microsoft.netcore.app.ref/8.0.14/microsoft.netcore.app.ref.8.0.14.nupkg.sha512",
-    "/home/pedro-henrique/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.14/microsoft.aspnetcore.app.ref.8.0.14.nupkg.sha512",
-    "/home/pedro-henrique/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.14/microsoft.netcore.app.host.linux-x64.8.0.14.nupkg.sha512"
+    "/home/pedro-henrique/.nuget/packages/microsoft.netcore.app.runtime.linux-x64/8.0.18/microsoft.netcore.app.runtime.linux-x64.8.0.18.nupkg.sha512",
+    "/home/pedro-henrique/.nuget/packages/microsoft.aspnetcore.app.runtime.linux-x64/8.0.18/microsoft.aspnetcore.app.runtime.linux-x64.8.0.18.nupkg.sha512",
+    "/home/pedro-henrique/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.18/microsoft.netcore.app.host.linux-x64.8.0.18.nupkg.sha512"
   ],
   "logs": []
 }
