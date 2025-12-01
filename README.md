@@ -65,11 +65,23 @@ Together, these visual effects create a clear and beginner‑friendly gameplay e
 
 ---
 
-## Requirements
+## Running code:
+
+### Running From Source
+
+**If you have already installed the .NET 8 SDK:**
+
+From the project root (/Chess-Game):
+
+```bash
+dotnet run
+```
+
+### Requirements
 
 If you want to run the project from source, you must have:
 
-### **.NET 8.0 SDK**
+#### **.NET 8.0 SDK**
 
 Download at: [https://dotnet.microsoft.com/en-us/download/dotnet/8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 
@@ -95,15 +107,8 @@ If it doesn’t appear, install the correct SDK.
 
 ---
 
-## Running From Source
 
-From the project root:
-
-```bash
-dotnet run
-```
-
-### Linux Execution Permission Issue
+#### Linux Execution Permission Issue
 
 If the command fails, give execution permission to the build folder:
 
@@ -125,7 +130,7 @@ dotnet run
 
 ---
 
-## Running the Precompiled Binary (Linux x64 Only)
+#### Running the Precompiled Binary (Linux x64 Only)
 
 This project includes a **precompiled standalone binary** that runs **without needing .NET installed**.
 
